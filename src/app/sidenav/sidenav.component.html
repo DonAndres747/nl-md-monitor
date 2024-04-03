@@ -2,17 +2,17 @@
   <ul class="sidenav-nav">
     @for(data of navData; track data.routerLink){
     <li class="sidenav-nav-item">
-      <a class="sidenav-nav-link" routerLink="data.routerLink">
+      <a class="sidenav-nav-link" routerLink="data.routerLink"> 
         @if(data.iconType){
-        <i class="material-icons" (click)="toggleCollapse()">home </i>
+        <i class="material-icons" (click)="toggleCollapse()">home </i> 
         }@else{
-        <button class="logo" (click)="toggleCollapse()">{{ data.icon }}</button>
+        <button class="logo" (click)="toggleCollapse()">{{ data.icon }}</button> 
         }
         <span class="sidenav-link-text" *ngIf="collapsed">
           {{ data.label }}
         </span>
       </a>
     </li>
-    }
+    } 
   </ul>
 </div>

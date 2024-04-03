@@ -6,17 +6,16 @@ mat-toolbar {
 
 .div-grid {
   display: grid;
-  grid-template-rows: 60px 1fr; 
+  grid-template-rows: 60px 1fr;
   max-height: 100%;
 }
 
-.grid-header{
+.grid-header {
   grid-row: 1;
 }
 
-.grid-body{
+.grid-body {
   grid-row: 2;
-  
 }
 
 mat-toolbar button {
@@ -28,8 +27,13 @@ mat-toolbar button {
 mat-icon {
   color: white;
   transform: scale(1.3);
+  transition: transform 0.3s ease;
 }
 
 img {
   width: 8%;
+}
+
+button:active{
+  transform: scale(0.9);
 }

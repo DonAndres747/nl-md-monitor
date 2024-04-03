@@ -18,9 +18,10 @@ interface SideNavToggle {
 export class MainComponent {
   isSideNavigationCollapsed = false;
   screenWidth = 0;
+  collapsed = false;
 
-  onToggleSideNav = (data: SideNavToggle) => {
-    this.screenWidth = data.screenWidth;
-    this.isSideNavigationCollapsed = data.collapsed;
+  toggleCollapse = () => {
+    this.collapsed = !this.collapsed;  
+    return false;
   };
 }

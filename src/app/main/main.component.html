@@ -2,10 +2,11 @@
   <div class="div-grid">
     <div class="grid-header">
       <mat-toolbar>
-        <button 
+        <button
+          (click)="toggleCollapse()"
           mat-icon-button
           class="example-icon"
-          aria-label="Example icon-button with menu icon"  
+          aria-label="Example icon-button with menu icon"
         >
           <mat-icon>menu</mat-icon>
         </button>
@@ -13,7 +14,7 @@
       </mat-toolbar>
     </div>
     <div class="row-body">
-      <app-sidenav (onToggleSideNav)="onToggleSideNav($event)" />
+      <app-sidenav [collapsed]="collapsed" />
     </div>
   </div>
 </body>
