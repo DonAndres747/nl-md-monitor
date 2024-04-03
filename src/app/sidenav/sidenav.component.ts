@@ -12,8 +12,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrl: './sidenav.component.css',
 })
 export class SidenavComponent {
-  @Input() collapsed = false;
-  @Output() onToggleSideNav: EventEmitter<string> = new EventEmitter();
+  // @Input() collapsed = false;
+  collapsed = false;
   navData = navbarData;
   selectedTabs: any[] = [];
 
@@ -21,7 +21,7 @@ export class SidenavComponent {
     const selectedElement = this.navData.find((item) => item.selected === true);
 
     if (this.navData[index].selected || !selectedElement) {
-      this.toggleCollapse();
+      this.collapsed = !this.collapsed;
     }
 
     this.navData.forEach((item, i) => {
@@ -29,12 +29,10 @@ export class SidenavComponent {
     });
   }
 
-  toggleCollapse = () => {
-    this.collapsed = !this.collapsed;
-    this.onToggleSideNav.emit();
-  };
-
-  vh() {
-    console.log(this.selectedTabs);
+  closeToggle() {
+    this.collapsed = false;
+    this.navData.forEach((item, i) => {
+      item.selected = false;
+    });
   }
 }

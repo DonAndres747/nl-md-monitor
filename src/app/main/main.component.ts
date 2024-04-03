@@ -5,10 +5,6 @@ import { SidenavComponent } from '../sidenav/sidenav.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 
-interface SideNavToggle {
-  screenWidth: number;
-  collapsed: boolean;
-}
 
 @Component({
   selector: 'app-main',
@@ -24,12 +20,10 @@ interface SideNavToggle {
   styleUrl: './main.component.css',
 })
 export class MainComponent {
-  isSideNavigationCollapsed = false;
-  screenWidth = 0;
-  collapsed = false;
+  // collapsed = false;
 
-  toggleCollapse = () => {
-    this.collapsed = !this.collapsed;
-    return false;
-  };
+  // toggleCollapse = () => {
+  //   this.collapsed = !this.collapsed;
+  //   return false;
+  // };
 }

@@ -2,21 +2,22 @@
   <div class="div-grid">
     <div class="grid-header">
       <mat-toolbar>
-        <button
+        <!-- <button
           (click)="toggleCollapse()"
           mat-icon-button
           class="example-icon"
           aria-label="Example icon-button with menu icon"
         >
           <mat-icon>menu</mat-icon>
-        </button>
+        </button> -->
         <img src="../../assets/Netlogistik_Logo_Blanco.png" />
       </mat-toolbar>
     </div>
     <div class="row-body">
       <div class="column-body">
         <div class="sidenav">
-          <app-sidenav [collapsed]="collapsed" />
+          <!-- <app-sidenav [collapsed]="collapsed" /> -->
+          <app-sidenav />
         </div>
         <div class="dashboard">
           <router-outlet />

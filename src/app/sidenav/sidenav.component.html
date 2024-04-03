@@ -6,7 +6,7 @@
         @if(data.iconType){
         <i
           class="material-icons"
-          (click)="data.tabs.length == 0 ? '' : selectItem(idx)"
+          (click)="data.tabs.length == 0 ? closeToggle(): selectItem(idx)"
           [routerLink]="
             data.tabs.length !== 0 ? '/main/' + data.tabs[idx].route : '/main/' 
           "
