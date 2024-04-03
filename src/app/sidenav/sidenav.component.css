@@ -1,12 +1,12 @@
 .sidenav {
-  background-color: rgb(16, 102, 115);
-  transition:  width  0.5s ease;
+  background-color: rgba(76, 102, 115, 255);
+  transition: width 0.5s ease;
   position: fixed;
   width: 4rem;
   height: 100vh;
   box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
 }
- 
+
 button {
   text-align: center;
   color: white;
@@ -15,16 +15,19 @@ button {
   padding: 0.313;
   font-size: 24px;
   font-weight: 700;
-} 
- 
+}
+
 i,
 button {
   color: white;
   transform: scale(1.3);
   margin: 0 10% 0 5%;
   text-align: center;
-  /* transition: all 0.5s ease; */
 }
+
+/* a {
+  transition: all 0.5s ease;
+} */
 
 .sidenav-collapsed {
   width: 15rem;
@@ -57,7 +60,6 @@ button {
 .sidenav-link-text {
   font-size: 18px;
 }
-
 
 .sidenav-nav-item:hover .sidenav-nav-link {
   background-color: white;

@@ -14,7 +14,14 @@
       </mat-toolbar>
     </div>
     <div class="row-body">
-      <app-sidenav [collapsed]="collapsed" />
+      <div class="column-body">
+        <div class="sidenav">
+          <app-sidenav [collapsed]="collapsed" />
+        </div>
+        <div class="dashboard">
+          <router-outlet />
+        </div>
+      </div>
     </div>
   </div>
 </body>

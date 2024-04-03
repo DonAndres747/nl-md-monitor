@@ -1,18 +1,40 @@
 <div class="sidenav" [ngClass]="collapsed ? 'sidenav-collapsed' : ''">
   <ul class="sidenav-nav">
-    @for(data of navData; track data.routerLink){
+    @for(data of navData; track data.id; let idx= $index){
     <li class="sidenav-nav-item">
-      <a class="sidenav-nav-link" routerLink="data.routerLink"> 
+      <a class="sidenav-nav-link">
         @if(data.iconType){
-        <i class="material-icons" (click)="toggleCollapse()">home </i> 
+        <i
+          class="material-icons"
+          (click)="data.tabs.length == 0 ? '' : selectItem(idx)"
+          [routerLink]="
+            data.tabs.length !== 0 ? '/main/' + data.tabs[idx].route : '/main/' 
+          "
+        >
+          {{ data.icon }}
+        </i>
         }@else{
-        <button class="logo" (click)="toggleCollapse()">{{ data.icon }}</button> 
+        <button class="logo" (click)="selectItem(idx)">
+          {{ data.icon }}
+        </button>
         }
-        <span class="sidenav-link-text" *ngIf="collapsed">
-          {{ data.label }}
-        </span>
+        <ul>
+          @for(tab of data.tabs; track tab.label; let idy = $index){
+          <li *ngIf="data.selected">
+            <a
+              class="sidenav-nav-link"
+              [routerLink]="'/main/' + tab.route"
+              (click)="selectItem(idx)"
+            >
+              <span class="sidenav-link-text" *ngIf="data.selected">
+                {{ tab.label }}
+              </span>
+            </a>
+          </li>
+          }
+        </ul>
       </a>
     </li>
-    } 
+    }
   </ul>
 </div>

@@ -24,6 +24,10 @@ mat-toolbar button {
   margin-right: 20px;
 }
 
+button:active {
+  transform: scale(0.9);
+}
+
 mat-icon {
   color: white;
   transform: scale(1.3);
@@ -34,6 +38,17 @@ img {
   width: 8%;
 }
 
-button:active{
-  transform: scale(0.9);
+.column-body {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  max-width: 100%;
+}
+
+.sidenav {
+  max-width: 100%;
+  grid-column: 1;
+}
+
+.dashboard {
+  grid-column: 2;
 }
