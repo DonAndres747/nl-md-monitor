@@ -1,0 +1,19 @@
+<body>
+  <div class="div-grid">
+    <div class="grid-header">
+      <mat-toolbar>
+        <button 
+          mat-icon-button
+          class="example-icon"
+          aria-label="Example icon-button with menu icon"  
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+        <img src="../../assets/Netlogistik_Logo_Blanco.png" />
+      </mat-toolbar>
+    </div>
+    <div class="row-body">
+      <app-sidenav (onToggleSideNav)="onToggleSideNav($event)" />
+    </div>
+  </div>
+</body>

@@ -1,0 +1,71 @@
+.sidenav {
+  background-color: rgb(16, 102, 115);
+  transition:  width  0.5s ease;
+  position: fixed;
+  width: 4rem;
+  height: 100vh;
+  box-shadow: 0.063rem 0 1.25rem 0 #8690a3;
+}
+ 
+button {
+  text-align: center;
+  color: white;
+  background: none;
+  border: 0;
+  padding: 0.313;
+  font-size: 24px;
+  font-weight: 700;
+} 
+ 
+i,
+button {
+  color: white;
+  transform: scale(1.3);
+  margin: 0 10% 0 5%;
+  text-align: center;
+  /* transition: all 0.5s ease; */
+}
+
+.sidenav-collapsed {
+  width: 15rem;
+}
+
+.sidenav-nav {
+  list-style: none;
+  padding: 0.938rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 3.65rem);
+}
+
+.sidenav-nav-item {
+  width: 100%;
+  margin-bottom: 0.625rem;
+}
+
+.sidenav-nav-link {
+  display: flex;
+  align-items: center;
+  height: 3rem;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.6rem;
+  transition: all 0.3s ease;
+}
+
+.sidenav-link-text {
+  font-size: 18px;
+}
+
+
+.sidenav-nav-item:hover .sidenav-nav-link {
+  background-color: white;
+  color: rgb(0, 38, 58);
+}
+
+.sidenav-nav-item:hover button,
+.sidenav-nav-item:hover i {
+  background-color: none;
+  color: rgb(0, 38, 58);
+}
