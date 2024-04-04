@@ -1,38 +1,38 @@
 export const navbarData = [
   {
-    id: 'home',
+    id: 'Home',
     selected: false,
     icon: 'home',
     iconType: true,
     tabs: [],
   },
   {
-    id: 'wms',
+    id: 'WMS',
     selected: false,
-    icon: 'W',
+    icon: 'W ',
     iconType: false,
     tabs: [
-      { label: 'WMS', route: 'wms' },
+      { label: 'WMS Historic', route: 'wms' },
       { label: 'Config', route: 'wmsConf' },
     ],
   },
   {
-    id: 'tep',
+    id: 'TEP',
     selected: false,
     icon: 'T',
     iconType: false,
     tabs: [
-      { label: 'Tep', route: 'tep' },
+      { label: 'TEP Historic', route: 'tep' },
       { label: 'Config', route: 'tepConf' },
     ],
   },
   {
-    id: 'sap',
+    id: 'SAP',
     selected: false,
     icon: 'S',
     iconType: false,
     tabs: [
-      { label: 'Sap', route: 'sap' },
+      { label: 'SAP Historic', route: 'sap' },
       { label: 'Config', route: 'sapConf' },
     ],
   },
