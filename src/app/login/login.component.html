@@ -2,6 +2,7 @@
   <main class="main">
     <div class="login">
       <form class="custom-form">
+      <!-- <form (ngSubmit)="onSubmit()"> -->
         <div class="logo">
           <img src="../../assets/Netlogistik_Logo_Blanco.png" />
           <div class="logo-footer"></div>
@@ -14,7 +15,7 @@
           <label for="email">password</label>
           <input type="password" name="password" />
         </div>
-        <a routerLink="main"><button type="button">Log In</button></a>
+        <a routerLink="main"><button type="button" (click)="onSubmit()">Log In</button></a>
       </form>
     </div>
   </main>
