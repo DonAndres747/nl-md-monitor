@@ -7,10 +7,11 @@ import { Observable } from 'rxjs';
 })
 export class AuthenticationService {
 
-  urlLogin: string = 'http://localhost:9000/nl/14';
+  urlLogin: string = 'http://localhost:9000/nl/auth';
   constructor(private httpClient: HttpClient) {}
 
-  loginAuthentication(): Observable<any>{
-    return this.httpClient.get(this.urlLogin).pipe(res => res);
+  loginAuthentication(username: string, password: string) {
+    const body = { "usr_id": username, "password": password };
+    return this.httpClient.post(this.urlLogin, body);
   }
 }
