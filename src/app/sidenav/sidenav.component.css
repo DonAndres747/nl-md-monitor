@@ -50,14 +50,18 @@ button {
 .sidenav-nav-link {
   display: flex;
   align-items: center;
-  height: 3rem;
+  height: 3rem;   
   color: white;
   text-decoration: none;
   border-radius: 0.6rem;
   transition: all 0.3s ease;
 }
 
-span:hover {
+.item-element a,  span{
+  z-index: 1;
+}
+
+span:hover, .item-element a:hover {
   background-color: white;
   color: rgb(0, 38, 58);
 }

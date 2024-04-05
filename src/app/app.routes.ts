@@ -5,6 +5,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { WMSComponent } from './wms/wms.component';
 import { TepComponent } from './tep/tep.component';
 import { SapComponent } from './sap/sap.component';
+import { ConfigComponent } from './config/config.component';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -16,6 +17,7 @@ export const routes: Routes = [
       { path: 'wms', component: WMSComponent },
       { path: 'tep', component: TepComponent },
       { path: 'sap', component: SapComponent },
+      { path: 'config/:sol', component: ConfigComponent },
     ],
   },
   { path: '**', redirectTo: '' },

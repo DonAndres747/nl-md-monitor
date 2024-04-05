@@ -13,7 +13,7 @@ export const navbarData = [
     iconType: false,
     tabs: [
       { label: 'WMS Historic', route: 'wms' },
-      { label: 'Config', route: 'wmsConf' },
+      { label: 'Config', route: 'config/wms' },
     ],
   },
   {
@@ -23,7 +23,7 @@ export const navbarData = [
     iconType: false,
     tabs: [
       { label: 'TEP Historic', route: 'tep' },
-      { label: 'Config', route: 'tepConf' },
+      { label: 'Config', route: 'config/' },
     ],
   },
   {
@@ -33,7 +33,7 @@ export const navbarData = [
     iconType: false,
     tabs: [
       { label: 'SAP Historic', route: 'sap' },
-      { label: 'Config', route: 'sapConf' },
+      { label: 'Config', route: 'config/' },
     ],
   },
 ];
