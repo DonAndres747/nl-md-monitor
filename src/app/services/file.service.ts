@@ -20,13 +20,34 @@ export class FileService {
   ): Observable<any> {
     const body = {
       ruta: rutaArchivo,
-      nuevoContenido: nuevoContenido,
+      newContent: nuevoContenido,
       solNum: solNum,
     };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
     return this.http
       .post<any>('http://localhost:3000/modificar-archivo', body, { headers })
+      .pipe(
+        map((response) => {
+          console.log('Respuesta del servidor:', response);
+          return response;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  getWar(
+    path: string,
+    newContent: string,
+    contentLine: number
+  ): Observable<any> {
+    const body = { filePath: path, newContent, contentLine };
+    console.log('body enviado al servidor:', body);
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http
+      .post<any>('http://localhost:3000/archivo-war', body, { headers })
       .pipe(
         map((response) => {
           console.log('Respuesta del servidor:', response);

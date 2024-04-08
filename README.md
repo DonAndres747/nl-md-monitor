@@ -30,3 +30,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 npm install -g @angular/cli
 ng add @angular/material
 npm i --save-dev @types/fs-extra
+npm install --save-dev npm-run-all
+npm install jszip

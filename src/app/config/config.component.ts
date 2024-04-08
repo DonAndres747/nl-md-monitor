@@ -15,8 +15,9 @@ export class ConfigComponent implements OnInit {
 
   solution: any;
 
-  rutaArchivo =
-    'C:/Users/AndresFelipeGiraldoB/Documents/Proyecto visual/MiddleWare monitor/MD-monitor/prueba.txt';
+  rutaArchivo = 'prueba.war';
+  newContent = 'tres';
+  contentLine = 2;
 
   ngOnInit() {
     this.rutaActiva.paramMap.subscribe((params) => {
@@ -24,15 +25,28 @@ export class ConfigComponent implements OnInit {
     });
   }
 
-  modificarArchivo(nuevoContenido: string) { 
+  updateFile(nuevoContenido: string) {
     this.fileService
-      .modificarArchivo(this.rutaArchivo, nuevoContenido, 3)
+      .modificarArchivo(this.rutaArchivo, nuevoContenido, 2)
       .subscribe(
         (response) => {
-          // console.log(response);
+          console.log(response);
         },
         (error) => {
-          // console.error(error);
+          console.error(error);
+        }
+      );
+  }
+
+  getWar() {
+    this.fileService
+      .getWar(this.rutaArchivo, this.newContent, this.contentLine)
+      .subscribe(
+        (response) => {
+          console.log(response);
+        },
+        (error) => {
+          console.error(error);
         }
       );
   }
