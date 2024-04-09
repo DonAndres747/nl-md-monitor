@@ -21,7 +21,7 @@ export class ConfigComponent implements OnInit {
 
   ngOnInit() {
     this.rutaActiva.paramMap.subscribe((params) => {
-      this.solution = params.get('sol');
+      this.solution = params.get('sol')?.toUpperCase();
     });
   }
 

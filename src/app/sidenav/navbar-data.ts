@@ -23,7 +23,7 @@ export const navbarData = [
     iconType: false,
     tabs: [
       { label: 'TEP Historic', route: 'tep' },
-      { label: 'Config', route: 'config/' },
+      { label: 'Config', route: 'config/tep' },
     ],
   },
   {
@@ -33,7 +33,7 @@ export const navbarData = [
     iconType: false,
     tabs: [
       { label: 'SAP Historic', route: 'sap' },
-      { label: 'Config', route: 'config/' },
+      { label: 'Config', route: 'config/sap' },
     ],
   },
 ];
