@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { navbarData } from './navbar-data';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
@@ -11,19 +18,30 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css',
 })
-export class SidenavComponent {
-  // @Input() collapsed = false;
-  collapsed = false;
+export class SidenavComponent implements OnChanges {
+  @Input() collapsed: boolean = false;
+  @Output() collapsedChange: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   navData = navbarData;
   selectedTabs: any[] = [];
 
+  ngOnChanges(changes: SimpleChanges) {
+    const collapsedChange = changes['collapsed'];
+    if (!collapsedChange.currentValue) {
+      this.navData.forEach((item, i) => {
+        item.selected = false;
+      });
+    } else {
+     console.log("Menu", this.menu());
+    }
+  }
+
   selectItem(index: number) {
     const selectedElement = this.navData.find((item) => item.selected === true);
-
     if (this.navData[index].selected || !selectedElement) {
       this.collapsed = !this.collapsed;
+      this.collapsedChange.emit(this.collapsed);
     }
-
     this.navData.forEach((item, i) => {
       item.selected = i == index ? !item.selected : false;
     });
@@ -31,8 +49,15 @@ export class SidenavComponent {
 
   closeToggle() {
     this.collapsed = false;
+    this.collapsedChange.emit(this.collapsed);
     this.navData.forEach((item, i) => {
       item.selected = false;
     });
+  }
+
+  menu() {
+    return (
+      this.collapsed && !this.navData.find((item) => item.selected === true)
+    );
   }
 }

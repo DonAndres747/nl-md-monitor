@@ -49,6 +49,6 @@ img {
   grid-column: 1;
 }
 
-.dashboard {
+.child {
   grid-column: 2;
 }

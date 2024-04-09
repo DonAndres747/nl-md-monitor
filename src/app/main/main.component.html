@@ -2,24 +2,26 @@
   <div class="div-grid">
     <div class="grid-header">
       <mat-toolbar>
-        <!-- <button
-          (click)="toggleCollapse()"
+        <button
+          (click)="onCollapsedChange(!isCollapsed)"
           mat-icon-button
           class="example-icon"
           aria-label="Example icon-button with menu icon"
         >
           <mat-icon>menu</mat-icon>
-        </button> -->
+        </button>
         <img src="../../assets/Netlogistik_Logo_Blanco.png" />
       </mat-toolbar>
     </div>
     <div class="row-body">
       <div class="column-body">
         <div class="sidenav">
-          <!-- <app-sidenav [collapsed]="collapsed" /> -->
-          <app-sidenav />
+          <app-sidenav
+            [collapsed]="isCollapsed"
+            (collapsedChange)="onCollapsedChange($event)"
+          />
         </div>
-        <div class="dashboard">
+        <div class="child" (click)="onCollapsedChange(false)">
           <router-outlet />
         </div>
       </div>

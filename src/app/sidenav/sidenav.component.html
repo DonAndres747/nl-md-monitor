@@ -22,8 +22,16 @@
           {{ data.icon }}
         </button>
         }
-        <div class="elements-body" *ngIf="data.selected">
-          <h1 *ngIf="data.selected">{{ data.id }}</h1>
+        <div
+          class="elements-body"
+          *ngIf="!data.selected ? menu() : data.selected"
+        >
+          <h1
+            [ngClass]="!data.selected && menu() ? 'h1ShowAll' : ''"
+            *ngIf="!data.selected ? menu() : data.selected"
+          >
+            {{ data.id }}
+          </h1>
           <ul class="item-element">
             @for(tab of data.tabs; track tab.label; let idy = $index){
             <li *ngIf="data.selected">

@@ -1,6 +1,6 @@
 export const navbarData = [
   {
-    id: 'Home',
+    id: '',
     selected: false,
     icon: 'home',
     iconType: true,

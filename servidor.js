@@ -43,87 +43,91 @@ app.post("/modificar-archivo", (req, res) => {
   });
 });
 
-app.post("/archivo-war", (req, res) => {
+app.post("/archivo-war", async (req, res) => {
   const { filePath, newContent, contentLine } = req.body;
   const rarFilePath = filePath.replace(".war", ".rar");
-  fs.renameSync(filePath, rarFilePath);
 
-  modificarArchivoEnRAR(rarFilePath, newContent, contentLine);
+  try {
+    fs.renameSync(filePath, rarFilePath);
+
+    const result = await modificarArchivoEnRAR(
+      rarFilePath,
+      newContent,
+      contentLine
+    );
+    console.log(result);
+    res.status(200).json({
+      message: "good",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
+    res.status(500).json({
+      message: "Error interno del servidor",
+      success: false,
+    });
+  }
 });
 
 async function modificarArchivoEnRAR(rarFilePath, newContent, contentLine) {
-  try {
-    const directorio = "temp";
-    const buf = Uint8Array.from(fs.readFileSync(rarFilePath)).buffer;
-    const extractor = await unrar.createExtractorFromData({ data: buf });
-    const extracted = extractor.extract();
+  const directorio = "temp";
+  const buf = Uint8Array.from(fs.readFileSync(rarFilePath)).buffer;
+  const extractor = await unrar.createExtractorFromData({ data: buf });
+  const extracted = extractor.extract();
 
-    const files = [...extracted.files];
+  const files = [...extracted.files];
 
-    if (!fs.existsSync(directorio)) {
-      fs.mkdirSync(directorio);
-    }
-
-    const promises = files.map(async (file) => {
-      try {
-        const intento = Buffer.from(file.extraction.buffer);
-        let cadena = file.fileHeader.name;
-        let indiceUltimaBarra = cadena.lastIndexOf("/");
-        let nuevaCadena = cadena.substring(0, indiceUltimaBarra + 1);
-        fs.mkdirSync("temp/" + nuevaCadena, { recursive: true });
-        fs.writeFileSync("temp/" + file.fileHeader.name, intento, "utf8");
-      } catch (error) {}
-    });
-
-    Promise.all(promises)
-      .then(() => {
-        fs.readFile("temp/prueba.txt", "utf8", (err, data) => {
-          if (err) {
-            console.error("Error al leer el archivo:", err);
-          }
-          let lineas = data.split("\n");
-          lineas[contentLine] = newContent;
-          let nuevoContenido = lineas.join("\n");
-          fs.writeFile("temp/prueba.txt", nuevoContenido, (err) => {
-            if (err) {
-              console.error("Error al escribir en el archivo:", err);
-            } else {
-              // const comando = '"C:\\Program Files\\WinRAR\\WinRAR.exe" a -r -ep1 prueba.rar temp/*'; -> comando para no tener winrar en el server
-
-              const comando = "winrar a -r -ep1 prueba.rar temp/*";
-
-              exec(comando, (error, stdout, stderr) => {
-                if (error) {
-                  console.error(
-                    `Error al comprimir la carpeta: ${error.message}`
-                  );
-                  return;
-                }
-                if (stderr) {
-                  console.error(`Error de WinRAR: ${stderr}`);
-                  return;
-                }
-                rimraf.sync(directorio);
-                console.log(`Carpeta comprimida exitosamente: ${stdout}`);
-
-                const filePath = rarFilePath.replace(".rar", ".war");
-                fs.renameSync(rarFilePath, filePath);
-                console.log(
-                  "El archivo dentro del RAR ha sido modificado exitosamente."
-                );
-              });
-            }
-          });
-        });
-      })
-      .catch((error) => {
-        console.error("Error al modificar archivos:", error);
-      });
-  } catch (error) {
-    const filePath = rarFilePath.replace(".rar", ".war");
-    fs.renameSync(rarFilePath, filePath);
-    console.error("Error al modificar el archivo dentro del RAR:", error);
+  if (!fs.existsSync(directorio)) {
+    fs.mkdirSync(directorio);
   }
+
+  const promises = files.map(async (file) => {
+    try {
+      const intento = Buffer.from(file.extraction.buffer);
+      let cadena = file.fileHeader.name;
+      let indiceUltimaBarra = cadena.lastIndexOf("/");
+      let nuevaCadena = cadena.substring(0, indiceUltimaBarra + 1);
+      fs.mkdirSync("temp/" + nuevaCadena, { recursive: true });
+      fs.writeFileSync("temp/" + file.fileHeader.name, intento, "utf8");
+    } catch (error) {}
+  });
+
+  Promise.all(promises);
+
+  return new Promise((resolve, reject) => {
+    fs.readFile("temp/prueba.txt", "utf8", (err, data) => {
+      let lineas = data.split("\n");
+      lineas[contentLine] = newContent;
+      let nuevoContenido = lineas.join("\n");
+      fs.writeFile("temp/prueba.txt", nuevoContenido, (err, data) => {
+        if (err) {
+          rimraf.sync(directorio);
+          fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
+          reject(`Error al leer la carpeta: ${error.message}`);
+        }
+        // const comando = '"C:\\Program Files\\WinRAR\\WinRAR.exe" a -r -ep1 prueba.rar temp/*'; -> comando para no tener winrar en el server
+
+        const comando = "winrar a -r -ep1 prueba.rar temp/*";
+
+        exec(comando, (error, stdout, stderr) => {
+          if (error) {
+            rimraf.sync(directorio);
+            fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
+            reject(`Error al comprimir la carpeta: ${error.message}`);
+          }
+          if (stderr) {
+            rimraf.sync(directorio);
+            fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
+            reject(`Error de WinRAR: ${stderr}`);
+          }
+          rimraf.sync(directorio);
+          fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
+          resolve("El archivo dentro del RAR ha sido modificado exitosamente.");
+        });
+      });
+    });
+  });
 }
 
 const PORT = 3000;
