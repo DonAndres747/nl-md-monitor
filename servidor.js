@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/modificar-archivo", (req, res) => {
+/* app.post("/modificar-archivo", (req, res) => {
   const { ruta, newContent, solNum } = req.body;
 
   if (!fs.existsSync(ruta)) {
@@ -41,7 +41,7 @@ app.post("/modificar-archivo", (req, res) => {
         .json({ success: true, message: "Archivo modificado correctamente" });
     });
   });
-});
+}); */
 
 app.post("/archivo-war", async (req, res) => {
   const { filePath, newContent, contentLine } = req.body;
