@@ -1,4 +1,4 @@
-body{
+body {
   background-color: rgb(0, 38, 58);
 }
 
@@ -75,6 +75,8 @@ input {
 
 a {
   width: 100%;
+  justify-content: center;
+  display: flex;
 }
 
 button {
@@ -82,5 +84,11 @@ button {
   width: 100%;
   color: white;
   height: 5vh;
+  font-size: 1.3rem;
   border: 0px;
+}
+
+button:active {
+  background-color: rgba(8, 99, 204, 0.63);
+  transform: scale(0.9);
 }

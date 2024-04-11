@@ -11,41 +11,8 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-/* app.post("/modificar-archivo", (req, res) => {
-  const { ruta, newContent, solNum } = req.body;
-
-  if (!fs.existsSync(ruta)) {
-    return res
-      .status(404)
-      .json({ success: false, message: "El archivo no existe" });
-  }
-
-  fs.readFile(ruta, "utf8", (err, data) => {
-    if (err) {
-      console.error("Error al leer el archivo:", err);
-      return res
-        .status(500)
-        .json({ success: false, message: "Error al leer el archivo" });
-    }
-    let lineas = data.split("\n");
-    lineas[solNum] = newContent;
-    let nuevoContenido = lineas.join("\n");
-    fs.writeFile(ruta, nuevoContenido, (err) => {
-      if (err) {
-        console.error("Error al escribir en el archivo:", err);
-        return res
-          .status(500)
-          .json({ success: false, message: "Error al escribir en el archivo" });
-      }
-      res
-        .status(200)
-        .json({ success: true, message: "Archivo modificado correctamente" });
-    });
-  });
-}); */
-
 const upload = multer();
-app.post("/archivo-war", upload.single("warData"), async (req, res) => {
+app.post("/update-prop", upload.single("warData"), async (req, res) => {
   const { newContent, contentLine } = req.body;
   const warData = req.file.buffer;
 
@@ -56,11 +23,7 @@ app.post("/archivo-war", upload.single("warData"), async (req, res) => {
   fs.renameSync(warFilePath, rarFilePath);
 
   try {
-    const result = await modificarArchivoEnRAR(
-      rarFilePath,
-      newContent,
-      contentLine
-    );
+    const result = await updateWar(rarFilePath, newContent, contentLine);
     console.log(result);
 
     const warFilePath = rarFilePath.replace(".rar", ".war");
@@ -97,7 +60,7 @@ app.post("/archivo-war", upload.single("warData"), async (req, res) => {
   }
 });
 
-async function modificarArchivoEnRAR(rarFilePath, newContent, contentLine) {
+async function updateWar(rarFilePath, newContent, contentLine) {
   const directorio = "temp";
   const buf = Uint8Array.from(fs.readFileSync(rarFilePath)).buffer;
   const extractor = await unrar.createExtractorFromData({ data: buf });
@@ -188,6 +151,38 @@ async function modificarArchivoEnRAR(rarFilePath, newContent, contentLine) {
     });
   });
 }
+app.post("/get-war", (req, res) => {
+  leerArchivo();
+
+  const { filePath } = req.body;
+  console.log(filePath);
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      res.writeHead(404);
+      res.end("Archivo no encontrado");
+      return;
+    }
+
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
+  });
+});
+
+// async function leerArchivo() {
+//   try {
+//     // Solicitar al usuario que seleccione un archivo
+//     const [handle] = await window.showOpenFilePicker();
+//     const file = await handle.getFile();
+
+//     // Leer el contenido del archivo como texto
+//     const contenido = await file.text();
+
+//     // Hacer algo con el contenido del archivo
+//     console.log(contenido);
+//   } catch (error) {
+//     console.error("Error al leer el archivo:", error);
+//   }
+// }
 
 const PORT = 3000;
 app.listen(PORT, () => {

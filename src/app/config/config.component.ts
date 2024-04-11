@@ -15,7 +15,7 @@ export class ConfigComponent implements OnInit {
 
   solution: any;
 
-  rutaArchivo = 'prueba.war';
+  rutaArchivo = 'C:/Users/andre/OneDrive/Escritorio/a/pr/pruebaotropc.war';
   newContent = 'tres';
   contentLine = 2;
 
@@ -25,9 +25,9 @@ export class ConfigComponent implements OnInit {
     });
   }
 
-  updateFile(nuevoContenido: string) {
+  updateProp() {
     this.fileService
-      .modificarArchivo(this.rutaArchivo, nuevoContenido, 2)
+      .updateProp(this.rutaArchivo, this.newContent, this.contentLine)
       .subscribe(
         (response) => {
           console.log(response);
@@ -38,16 +38,15 @@ export class ConfigComponent implements OnInit {
       );
   }
 
-  getWar() {
-    this.fileService
-      .getWar(this.rutaArchivo, this.newContent, this.contentLine)
-      .subscribe(
-        (response) => {
-          console.log(response);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
+  async getFile() {
+    try { 
+      const [handle] = await (window as any).showOpenFilePicker();
+      const file: File = await handle.getFile();
+ 
+      const contenido: string = await file.text(); 
+      console.log(contenido);
+    } catch (error) {
+      console.error('Error al leer el archivo:', error);
+    }
   }
 }
