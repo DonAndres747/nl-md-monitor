@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FileService } from '../services/file.service';
+import { ConfigService } from '../services/config.service';
+import { ClientModel } from '../model/client.model';
 
 @Component({
   selector: 'app-config',
@@ -10,43 +11,29 @@ import { FileService } from '../services/file.service';
 export class ConfigComponent implements OnInit {
   constructor(
     private rutaActiva: ActivatedRoute,
-    private fileService: FileService
+    private configService: ConfigService,
+    private clienModel: ClientModel
   ) {}
 
   solution: any;
-
-  rutaArchivo = 'C:/Users/andre/OneDrive/Escritorio/a/pr/pruebaotropc.war';
-  newContent = 'tres';
-  contentLine = 2;
+  serviceUrl: String = '';
+  tepEP: String = '';
+  sapEP: String = '';
+  dbName: any;
 
   ngOnInit() {
     this.rutaActiva.paramMap.subscribe((params) => {
       this.solution = params.get('sol')?.toUpperCase();
-    });
-  }
+      this.dbName = this.clienModel.getDbName();
 
-  updateProp() {
-    this.fileService
-      .updateProp(this.rutaArchivo, this.newContent, this.contentLine)
-      .subscribe(
-        (response) => {
+      this.configService
+        .getConnectionsUrls(this.dbName, this.solution.toLowerCase())
+        .subscribe((response) => {
           console.log(response);
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-  }
-
-  async getFile() {
-    try { 
-      const [handle] = await (window as any).showOpenFilePicker();
-      const file: File = await handle.getFile();
- 
-      const contenido: string = await file.text(); 
-      console.log(contenido);
-    } catch (error) {
-      console.error('Error al leer el archivo:', error);
-    }
+          this.tepEP = response.tep;
+          this.sapEP = response.sap;
+          this.serviceUrl = response.service;
+        });
+    });
   }
 }

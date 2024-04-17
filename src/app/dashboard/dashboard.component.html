@@ -1,1 +1,7 @@
-<p>dashboard works!</p>
+<h1 (click)="getWmstransactions()">Hola {{ name }}</h1>
+
+@if(transactions[0]){ @for (item of transactions; track item.id) {
+<li>{{ item.fromHost }}</li>
+} @empty {
+<li>There are no items.</li>
+} }

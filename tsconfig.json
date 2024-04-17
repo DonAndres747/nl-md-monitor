@@ -23,6 +23,7 @@
       "dom"
     ],
     "allowJs": true, 
+    "resolveJsonModule": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -6,6 +6,7 @@ import { WMSComponent } from './wms/wms.component';
 import { TepComponent } from './tep/tep.component';
 import { SapComponent } from './sap/sap.component';
 import { ConfigComponent } from './config/config.component';
+import { AuthGuard } from './auth.guard';
 
 export const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -19,6 +20,7 @@ export const routes: Routes = [
       { path: 'sap', component: SapComponent },
       { path: 'config/:sol', component: ConfigComponent },
     ],
+    canActivate: [AuthGuard],
   },
   { path: '**', redirectTo: '' },
 ];

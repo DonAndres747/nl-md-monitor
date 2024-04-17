@@ -1,188 +1,148 @@
+const properties = require("./properties.json");
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
-const fs = require("fs");
-const unrar = require("node-unrar-js");
-const rimraf = require("rimraf");
-const { exec } = require("child_process");
-const multer = require("multer");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser"); 
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const upload = multer();
-app.post("/update-prop", upload.single("warData"), async (req, res) => {
-  const { newContent, contentLine } = req.body;
-  const warData = req.file.buffer;
+const clientsModel = mongoose.model("credentials", {
+  id: String,
+  user: String,
+  password: String,
+  connectionurl: String,
+  dbname: String,
+  name: String,
+});
 
-  const warFilePath = "temp.war";
-  fs.writeFileSync(warFilePath, Buffer.from(warData, "base64"));
+app.post("/api/login", async (req, res) => {
+  const { usr_id, password } = req.body;
 
-  const rarFilePath = warFilePath.replace(".war", ".rar");
-  fs.renameSync(warFilePath, rarFilePath);
+  await mongoose.disconnect();
+
+  await mongoose.connect(
+    `mongodb://${properties.database.host}:${properties.database.port}/${properties.database.dbName}`
+  );
 
   try {
-    const result = await updateWar(rarFilePath, newContent, contentLine);
-    console.log(result);
+    const client = await clientsModel.findOne({ user: usr_id });
+    if (!client) {
+      return res.status(401).json({ message: "Credenciales inválidas" });
+    }
 
-    const warFilePath = rarFilePath.replace(".rar", ".war");
-    fs.renameSync(rarFilePath, warFilePath);
+    // const validatePass = await bcrypt.compare(password, client.password);
 
-    const modifiedWarData = fs.readFileSync(warFilePath);
+    const validatePass = password === client.password;
+    if (!validatePass) {
+      return res.status(401).json({ message: "Credenciales inválidas" });
+    }
 
-    res.status(result.status).json({
-      message: result.message,
-      success: result.success,
-      modifiedWarData:
-        result.status == 200 ? modifiedWarData.toString("base64") : null,
+    res.status(200).json({
+      clientId: client.id,
+      user: client.user,
+      dbName: client.dbname,
+      connectionUrl: client.connectionurl,
+      userName: client.name,
     });
   } catch (error) {
-    console.log(error);
-    if (fs.existsSync(rarFilePath)) {
-      fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
-    }
-
-    res.status(500).json({
-      message: "Error interno del servidor",
-      success: false,
-    });
-  } finally {
-    if (fs.existsSync(warFilePath)) {
-      fs.unlinkSync(warFilePath);
-    }
-    if (fs.existsSync(rarFilePath)) {
-      fs.unlinkSync(rarFilePath);
-    }
-    if (fs.existsSync(rarFilePath)) {
-      fs.unlinkSync(rarFilePath);
-    }
+    res.status(500).json({ message: "Error interno del servidor" });
   }
 });
 
-async function updateWar(rarFilePath, newContent, contentLine) {
-  const directorio = "temp";
-  const buf = Uint8Array.from(fs.readFileSync(rarFilePath)).buffer;
-  const extractor = await unrar.createExtractorFromData({ data: buf });
-  const extracted = extractor.extract();
+const transactionSchema = new mongoose.Schema({
+  id: String,
+  sequence: String,
+  interface: String,
+  fromJson: String,
+  toJson: String,
+  status: String,
+  recordDate: String,
+  fromHost: String,
+  toHost: String,
+  message: String,
+});
 
-  const files = [...extracted.files];
+app.post("/db/wms_in", async (req, res) => {
+  const { dbName } = req.body;
 
-  if (!fs.existsSync(directorio)) {
-    fs.mkdirSync(directorio);
-  }
+  await mongoose.disconnect();
+  await mongoose.connect(
+    `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
+  );
 
-  const promises = files.map(async (file) => {
-    try {
-      const intento = Buffer.from(file.extraction.buffer);
-      let cadena = file.fileHeader.name;
-      let indiceUltimaBarra = cadena.lastIndexOf("/");
-      let nuevaCadena = cadena.substring(0, indiceUltimaBarra + 1);
-      fs.mkdirSync("temp/" + nuevaCadena, { recursive: true });
-      fs.writeFileSync("temp/" + file.fileHeader.name, intento, "utf8");
-    } catch (error) {
-      return {
-        status: 500,
-        message: "error al leer el archivo",
-        success: false,
-      };
+  const transactionModel = mongoose.model(
+    "wms_in",
+    transactionSchema,
+    "wms_in"
+  );
+
+  try {
+    const transactions = await transactionModel.find();
+    if (!transactions) {
+      return res.status(404).json({ message: "No data found" });
     }
-  });
 
-  Promise.all(promises);
+    const result = [];
 
-  return new Promise((resolve, reject) => {
-    fs.readFile("temp/prueba.txt", "utf8", (err, data) => {
-      let lineas = data.split("\n");
-      lineas[contentLine] = newContent;
-      let nuevoContenido = lineas.join("\n");
-      fs.writeFile("temp/prueba.txt", nuevoContenido, (err, data) => {
-        if (err) {
-          rimraf.sync(directorio);
-          fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
-          reject({
-            status: 500,
-            message: `Error al leer la carpeta: ${error.message}`,
-            success: false,
-          });
-        }
-        // const comando = '"C:\\Program Files\\WinRAR\\WinRAR.exe" a -r -ep1 prueba.rar temp/*'; -> comando para no tener winrar en el server
-
-        const comando = "winrar a -r -ep1 temp2.rar temp/*";
-
-        exec(comando, (error, stdout, stderr) => {
-          if (error) {
-            rimraf.sync(directorio);
-            console.log(
-              "ERRORHP___________________________________________________________________________________________"
-            );
-            console.log(error);
-            fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
-            reject({
-              status: 500,
-              message: `Error al comprimir la carpeta: ${error.message}`,
-              success: false,
-            });
-          }
-          if (stderr) {
-            rimraf.sync(directorio);
-            console.log(
-              "ERRORHP2___________________________________________________________________________________________"
-            );
-            console.log(stderr);
-            fs.renameSync(rarFilePath, rarFilePath.replace(".rar", ".war"));
-            reject({
-              status: 500,
-              message: `Error de procesamiento: ${stderr}`,
-              success: false,
-            });
-          }
-
-          fs.renameSync("temp2.rar", "temp.rar");
-
-          rimraf.sync(directorio);
-          resolve({
-            status: 200,
-            message: "Datos actualizados correctamente",
-            success: true,
-          });
-        });
+    transactions.forEach((transaction) => {
+      result.push({
+        id: transaction.id,
+        sequence: transaction.sequence,
+        interface: transaction.interface,
+        fromJson: transaction.fromJson,
+        toJson: transaction.toJson,
+        status: transaction.status,
+        recordDate: transaction.recordDate,
+        fromHost: transaction.fromHost,
+        toHost: transaction.toHost,
+        message: transaction.message,
       });
     });
-  });
-}
-app.post("/get-war", (req, res) => {
-  leerArchivo();
 
-  const { filePath } = req.body;
-  console.log(filePath);
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) {
-      res.writeHead(404);
-      res.end("Archivo no encontrado");
-      return;
-    }
-
-    const fileStream = fs.createReadStream(filePath);
-    fileStream.pipe(res);
-  });
+    res.status(200).json({ result });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
 });
 
-// async function leerArchivo() {
-//   try {
-//     // Solicitar al usuario que seleccione un archivo
-//     const [handle] = await window.showOpenFilePicker();
-//     const file = await handle.getFile();
+const connectionSchema = new mongoose.Schema({
+  id: String,
+  tep: String,
+  sap: String,
+  login: String,
+});
 
-//     // Leer el contenido del archivo como texto
-//     const contenido = await file.text();
+app.post("/db/connections", async (req, res) => {
+  const { dbName, connectionId } = req.body;
 
-//     // Hacer algo con el contenido del archivo
-//     console.log(contenido);
-//   } catch (error) {
-//     console.error("Error al leer el archivo:", error);
-//   }
-// }
+  if (mongoose.connection.name != dbName) {
+    await mongoose.disconnect();
+    await mongoose.connect(
+      `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
+    );
+  }
+
+  const connectionModel = mongoose.model(
+    "connections",
+    connectionSchema,
+    "connections"
+  );
+
+  try {
+    const connections = await connectionModel.find({ id: connectionId });
+    if (!connections) {
+      return res.status(404).json({ message: "No data found" });
+    }
+
+    res.status(200).json(connections[0]);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Error interno del servidor" });
+  }
+});
 
 const PORT = 3000;
 app.listen(PORT, () => {

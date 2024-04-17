@@ -5,16 +5,26 @@
   <div class="section">
     <h2>Servicio</h2>
     <label for="current">Actual URL:</label>
-    <input class="readonly" readonly value="localhost:4949/holi" />
+    <input class="readonly" readonly value="{{ serviceUrl }}" />
     <label for="current">Nueva URL:</label>
     <input />
   </div>
   <div class="section">
     <h2>Endpoint</h2>
-    <label for="current">Actual URL:</label>
-    <input class="readonly" readonly value="wms/example-end" />
-    <label for="current">Nueva URL:</label>
-    <input />
+    <div class="section2">
+      <div class="Endpoint-sec">
+        <label for="current">Actual TEP EP:</label>
+        <input class="readonly" readonly value="{{ tepEP }}" />
+        <label for="current">Nuevo EP:</label>
+        <input />
+      </div>
+      <div class="Endpoint-sec">
+        <label for="current">Actual SAP EP:</label>
+        <input class="readonly" readonly value="{{ sapEP }}" />
+        <label for="current">Nuevo EP:</label>
+        <input />
+      </div>
+    </div>
   </div>
   <div class="buttons">
     <button>Cancelar</button>
