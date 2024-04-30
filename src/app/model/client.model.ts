@@ -12,6 +12,9 @@ export class ClientModel {
   private dbNameKey = 'dbName';
   private connectionUrlKey = 'connectionUrl';
   private userNameKey = 'userName';
+  private wmsKey = 'wmsKey';
+  private tepKey = 'tepKey';
+  private sapKey = 'sapKey';
 
   private getExpirationDate(): Date {
     const expirationDate = new Date();
@@ -52,7 +55,11 @@ export class ClientModel {
 
   setConnectionUrl(connectionUrl: string): void {
     const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.connectionUrlKey, connectionUrl, expirationDate);
+    this.cookieService.set(
+      this.connectionUrlKey,
+      connectionUrl,
+      expirationDate
+    );
   }
 
   getUserName(): string {
@@ -64,11 +71,41 @@ export class ClientModel {
     this.cookieService.set(this.userNameKey, name, expirationDate);
   }
 
+  getWmsKey(): string {
+    return this.cookieService.get(this.wmsKey) || '';
+  }
+
+  setWmsKey(key: string): void {
+    const expirationDate = this.getExpirationDate();
+    this.cookieService.set(this.wmsKey, key, expirationDate);
+  }
+
+  getTepKey(): string {
+    return this.cookieService.get(this.tepKey) || '';
+  }
+
+  setTep(key: string): void {
+    const expirationDate = this.getExpirationDate();
+    this.cookieService.set(this.tepKey, key, expirationDate);
+  }
+
+  getSapkey(): string {
+    return this.cookieService.get(this.sapKey) || '';
+  }
+
+  setSapKey(key: string): void {
+    const expirationDate = this.getExpirationDate();
+    this.cookieService.set(this.sapKey, key, expirationDate);
+  }
+
   clear(): void {
     this.cookieService.delete(this.clientIdKey);
     this.cookieService.delete(this.userKey);
     this.cookieService.delete(this.dbNameKey);
     this.cookieService.delete(this.connectionUrlKey);
+    this.cookieService.delete(this.userNameKey);
+    this.cookieService.delete(this.userNameKey);
+    this.cookieService.delete(this.userNameKey);
     this.cookieService.delete(this.userNameKey);
   }
 }

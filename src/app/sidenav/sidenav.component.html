@@ -5,6 +5,7 @@
       <a class="sidenav-nav-link">
         @if(data.iconType){
         <i
+          *ngIf="data.available == 'true'"
           class="material-icons"
           [ngClass]="data.selected ? 'sidenav-nav-item-selected' : ''"
           (click)="data.tabs.length == 0 ? closeToggle() : selectItem(idx)"
@@ -16,6 +17,7 @@
         </i>
         }@else{
         <button
+          *ngIf="data.available == 'true'"
           [ngClass]="data.selected ? 'sidenav-nav-item-selected' : ''"
           (click)="selectItem(idx)"
         >

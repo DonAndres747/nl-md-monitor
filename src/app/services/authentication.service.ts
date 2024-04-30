@@ -46,30 +46,67 @@ export class AuthenticationService {
 
         this.isLogged = true;
 
-        const expirationDate = new Date();
-        expirationDate.setHours(expirationDate.getHours() + 1);
-        this.cookieService.set('token', 'true', expirationDate); 
+        this.getConnectionsAll(response.dbName).subscribe(() => {
+          const expirationDate = new Date();
+          expirationDate.setHours(expirationDate.getHours() + 1);
+          this.cookieService.set('token', 'true', expirationDate);
 
-        this.router.navigate(['/main']);
+          this.router.navigate(['/main']);
 
-        return response;
+          return response;
+        });
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  getConnectionsAll(dbName: string): Observable<any> {
+    const urlLogin: string = `http://${properties.services.host}:${properties.services.port}/db/connectionsAll`;
+
+    const body = { dbName };
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post<any>(urlLogin, body, { headers }).pipe(
+      map((response) => {
+        response.forEach((element: any) => {
+          switch (element.id) {
+            case 'wms': {
+              const key = element.service != null && element.service != '';
+              this.clientModel.setWmsKey(key.toString());
+              break;
+            }
+            case 'tep': {
+              const key = element.service != null && element.service != '';
+              this.clientModel.setTep(key.toString());
+              break;
+            }
+            case 'sap': {
+              const key = element.service != null && element.service != '';
+              console.log(key.toString(), element.id);
+              this.clientModel.setSapKey(key.toString());
+              break;
+            }
+          }
+        });
       }),
       catchError(this.handleError)
     );
   }
 
   private handleError(error: HttpErrorResponse) {
+    let resp = '';
     if (error.error instanceof ErrorEvent) {
       console.error('Ocurrió un error:', error.error.message);
+      resp = '5';
     } else {
-      console.log('Respuesta:', error.error.message);
+      resp = '4';
     }
-    this.isLogged = false;
-    return throwError('Error al autenticar las credenciales.');
+
+    return resp;
   }
 
   isLoggedIn(): Boolean {
-    // return this.isLogged;
     const token = this.cookieService.get('token') === 'true';
     return token;
   }

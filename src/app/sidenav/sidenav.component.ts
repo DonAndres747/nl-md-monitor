@@ -4,12 +4,14 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import { navbarData } from './navbar-data';
 import { MatIcon } from '@angular/material/icon';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ClientModel } from '../model/client.model';
 
 @Component({
   selector: 'app-sidenav',
@@ -18,12 +20,35 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './sidenav.component.html',
   styleUrl: './sidenav.component.css',
 })
-export class SidenavComponent implements OnChanges {
+export class SidenavComponent implements OnChanges, OnInit {
   @Input() collapsed: boolean = false;
   @Output() collapsedChange: EventEmitter<boolean> =
     new EventEmitter<boolean>();
   navData = navbarData;
   selectedTabs: any[] = [];
+
+  constructor(private clientModel: ClientModel) {}
+
+  ngOnInit(): void {
+    this.navData.forEach((item, i) => {
+      switch (item.id) {
+        case 'WMS':
+          item.available = this.clientModel.getWmsKey();
+          break;
+        case 'TEP':
+          item.available = this.clientModel.getTepKey();
+          break;
+        case 'SAP':
+          item.available = this.clientModel.getSapkey();
+          break;
+
+        default:
+          break;
+      }
+    });
+
+    
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     const collapsedChange = changes['collapsed'];
@@ -32,7 +57,7 @@ export class SidenavComponent implements OnChanges {
         item.selected = false;
       });
     } else {
-     console.log("Menu", this.menu());
+      //  console.log("Menu", this.menu());
     }
   }
 

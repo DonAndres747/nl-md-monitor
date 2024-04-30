@@ -11,14 +11,14 @@ import { transactionModel } from '../model/transaction.model';
 @Injectable({
   providedIn: 'root',
 })
-export class WmsService {
+export class TepService {
   constructor(private http: HttpClient) {}
 
   urlLogin: string = `http://${properties.services.host}:${properties.services.port}/db/in`;
   transactions: any[] = [];
 
-  getWmsTrans(dbName: string): Observable<any> {
-    const body = { dbName, sol: 'wms_in' };
+  getTepTrans(dbName: string): Observable<any> {
+    const body = { dbName, sol: 'tep_in' };
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 

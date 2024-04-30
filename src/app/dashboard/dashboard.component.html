@@ -1,7 +1,77 @@
-<h1 (click)="getWmstransactions()">Hola {{ name }}</h1>
+<body>
+  <div class="header">
+    <h1>Hola {{ name }}</h1>
+    <p>actividad reciente</p>
+  </div>
 
-@if(transactions[0]){ @for (item of transactions; track item.id) {
-<li>{{ item.fromHost }}</li>
-} @empty {
-<li>There are no items.</li>
-} }
+  <div class="dashboards">
+    <div class="dashboard" *ngIf="wms == 'true'">
+      <mat-card>
+        <mat-card-content>
+          <ngx-charts-bar-vertical
+            [results]="wmsChart"
+            [view]="view"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showGridLines]="false"
+            [gradient]="true"
+            (select)="onSelect($event)"
+          />
+        </mat-card-content>
+      </mat-card>
+      <h2>WMS</h2>
+    </div>
+    <div class="dashboard" *ngIf="tep == 'true'">
+      <mat-card>
+        <mat-card-content>
+          <ngx-charts-bar-vertical
+            [results]="tepChart"
+            [view]="view"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showGridLines]="false"
+            [gradient]="true"
+            (select)="onSelect($event)"
+          />
+        </mat-card-content>
+      </mat-card>
+      <h2>TEP</h2>
+    </div>
+    <div class="dashboard" *ngIf="sap == 'true'">
+      <mat-card>
+        <mat-card-content>
+          <ngx-charts-bar-vertical
+            [results]="sapChart"
+            [view]="view"
+            [scheme]="colorScheme"
+            [xAxis]="true"
+            [yAxis]="true"
+            [showGridLines]="false"
+            [gradient]="true"
+            (select)="onSelect($event)"
+          />
+        </mat-card-content>
+      </mat-card>
+      <h2>SAP</h2>
+    </div>
+    <div class="dashboard">
+      <mat-card>
+        <mat-card-content class="pastelChart">
+          <ngx-charts-pie-chart
+            [results]="pieChartData"
+            [view]="view"
+            [scheme]="colorScheme2"
+            [doughnut]="true"
+          />
+          <div>
+            <h3>Total</h3>
+            <h3>{{ total }}</h3>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <h2>General</h2>
+    </div>
+  </div>
+</body>

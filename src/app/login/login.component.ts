@@ -1,31 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthenticationService } from '../services/authentication.service';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
 export class LoginComponent implements OnInit {
   username: string = '';
   password: string = '';
-
-  ngOnInit(): void {}
+  logMess: string = '';
+  error: boolean = false;
 
   constructor(
     private authenticationService: AuthenticationService,
-    private router: Router
+    private cookieService: CookieService
   ) {}
+
+  ngOnInit(): void {
+    const allCookies: { [key: string]: string } = this.cookieService.getAll();
+    for (const cookieName in allCookies) {
+      if (allCookies.hasOwnProperty(cookieName)) {
+        this.cookieService.delete(cookieName);
+      }
+    }
+  }
 
   onSubmit() {
     this.authenticationService
       .loginAuthentication(this.username, this.password)
-      .subscribe(
-      );
+      .subscribe((resp) => {
+        resp == '4'
+          ? ((this.error = true),
+            (this.logMess = 'credenciales invalidas'),
+            setTimeout(() => {
+              this.error = false;
+              this.logMess = '';
+            }, 2000))
+          : resp == '5'
+          ? ((this.error = true),
+            (this.logMess = 'Error inesperado'),
+            setTimeout(() => {
+              this.error = false;
+              this.logMess = '';
+            }, 2000),
+            alert('Error inesperado'))
+          : '';
+      });
   }
 }

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class WmsModel {
+export class transactionModel {
   private id: string = '';
   private sequence: string = '';
   private interface: string = '';

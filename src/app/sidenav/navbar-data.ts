@@ -5,6 +5,7 @@ export const navbarData = [
     icon: 'home',
     iconType: true,
     tabs: [],
+    available: 'true',
   },
   {
     id: 'WMS',
@@ -15,6 +16,7 @@ export const navbarData = [
       { label: 'WMS Historic', route: 'wms' },
       { label: 'Config', route: 'config/wms' },
     ],
+    available: '',
   },
   {
     id: 'TEP',
@@ -25,6 +27,7 @@ export const navbarData = [
       { label: 'TEP Historic', route: 'tep' },
       { label: 'Config', route: 'config/tep' },
     ],
+    available: '',
   },
   {
     id: 'SAP',
@@ -35,5 +38,6 @@ export const navbarData = [
       { label: 'SAP Historic', route: 'sap' },
       { label: 'Config', route: 'config/sap' },
     ],
+    available: '',
   },
 ];

@@ -1,8 +1,9 @@
 body {
-  height: 100%;
+  height: inherit;
   background-image: url("./../../assets/imagen.png");
   background-repeat: no-repeat;
   background-size: cover;
+  padding: 2%;
 }
 
 body,
@@ -14,7 +15,7 @@ body,
 }
 
 a {
-  font-size: 220%;
+  font-size: 2vw;
   font-weight: bold;
   margin-top: 1%;
   color: rgb(255, 103, 32);
@@ -52,7 +53,7 @@ input {
   margin-bottom: 1.5%;
   text-align: center;
   border-width: 0px;
-  font-size: 1.5vw;
+  font-size: 1.2vw;
 }
 
 .section2 input {
@@ -78,8 +79,7 @@ h2 {
   margin-bottom: 1%;
 }
 
-.buttons button {
-  background-color: rgb(255, 103, 32);
+button {
   /* background-color:  rgb(0, 38, 58); */
   color: white;
   border: 0;
@@ -87,9 +87,15 @@ h2 {
   width: 30%;
   height: 5.5vh;
   font-size: 20px;
+  background-color: rgb(255, 103, 32);
 }
 
 .buttons button:active {
   transform: scale(0.9);
   background-color: rgb(201, 86, 33);
+}
+
+.buttonUnactive {
+  background-color: rgb(179, 83, 39);
+  color: lightgray;
 }

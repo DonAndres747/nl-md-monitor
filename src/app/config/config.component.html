@@ -7,27 +7,34 @@
     <label for="current">Actual URL:</label>
     <input class="readonly" readonly value="{{ serviceUrl }}" />
     <label for="current">Nueva URL:</label>
-    <input />
+    <input [(ngModel)]="serviceVal" name="serviceVal" />
   </div>
   <div class="section">
     <h2>Endpoint</h2>
     <div class="section2">
       <div class="Endpoint-sec">
         <label for="current">Actual TEP EP:</label>
-        <input class="readonly" readonly value="{{ tepEP }}" />
+        <input class="readonly" readonly value="{{ end1 }}" />
         <label for="current">Nuevo EP:</label>
-        <input />
+        <input [(ngModel)]="val1" name="val1" />
       </div>
       <div class="Endpoint-sec">
-        <label for="current">Actual SAP EP:</label>
-        <input class="readonly" readonly value="{{ sapEP }}" />
+        <label for="current"
+          >Actual {{ solution == "WMS" ? "SAP" : "WMS" }} EP:
+        </label>
+        <input class="readonly" readonly value="{{ end2 }}" />
         <label for="current">Nuevo EP:</label>
-        <input />
+        <input [(ngModel)]="val2" name="val2" />
       </div>
     </div>
   </div>
   <div class="buttons">
-    <button>Cancelar</button>
-    <button>Guardar</button>
+    <button (click)="clearinputs()">Limpiar</button>
+    <button
+      [ngClass]="active() ? 'buttonUnactive' : ''"
+      (click)="active() ? '' : updateConnections()"
+    >
+      Guardar
+    </button>
   </div>
 </body>
