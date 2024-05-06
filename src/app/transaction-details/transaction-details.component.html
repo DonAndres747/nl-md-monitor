@@ -1,0 +1,36 @@
+<body>
+  <div class="bodydiv">
+    <div>
+      <div class="header">
+        <h2>
+          {{ transaction.interface.toUpperCase() }}{{ "   "
+          }}{{ transaction.sequence }}
+        </h2>
+        <button style="" (click)="downloadJsonFile()">
+          <mat-icon 
+            >file_download
+          </mat-icon>
+        </button>
+      </div>
+      <div class="json">
+        <pre> {{ "Data: " + body }}</pre>
+      </div>
+    </div>
+    <div class="imgdiv">
+      <div>
+        <h2>Status:</h2>
+        <img
+          src="{{
+            transaction.status == 'OK'
+              ? './../../assets/bien.svg'
+              : './../../assets/mal.svg'
+          }}"
+          alt=""
+        />
+      </div>
+    </div>
+  </div>
+
+  <h2 class="output">Output:</h2>
+  <input type="text" value="{{ transaction.message }}" readonly="true" />
+</body>

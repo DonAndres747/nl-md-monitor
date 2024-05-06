@@ -3,6 +3,7 @@ import { AuthenticationService } from '../services/authentication.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CookieService } from 'ngx-cookie-service';
+import { ClientModel } from '../model/client.model';
 
 @Component({
   selector: 'app-login',
@@ -19,12 +20,15 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private clientModel: ClientModel
   ) {}
 
   ngOnInit(): void {
-    const allCookies: { [key: string]: string } = this.cookieService.getAll();
+    const allCookies: { [key: string]: string } = this.cookieService.getAll(); 
+
     for (const cookieName in allCookies) {
+      this.clientModel.clear();
       if (allCookies.hasOwnProperty(cookieName)) {
         this.cookieService.delete(cookieName);
       }

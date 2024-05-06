@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
     this.dbName = this.clientModel.getDbName();
     this.wms = this.clientModel.getWmsKey();
     this.tep = this.clientModel.getTepKey();
-    this.sap = this.clientModel.getSapkey();
+    this.sap = this.clientModel.getSapKey();
 
     this.getTransactions(this.dbName);
 

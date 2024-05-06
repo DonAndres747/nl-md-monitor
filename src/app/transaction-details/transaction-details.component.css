@@ -1,0 +1,94 @@
+body {
+  padding: 1% 5%;
+  width: 100%;
+}
+
+.bodydiv {
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: space-between;
+  width: 90%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header button {
+  border: 0;
+  background-color: transparent;
+  height: min-content;
+}
+
+.header mat-icon {
+  color: rgb(255, 103, 32);
+  margin: 0;
+}
+
+h2 {
+  margin: 2px;
+}
+
+.json {
+  border: 1px solid black;
+  border-radius: 10px;
+  width: 35vw;
+  background-color: white;
+  height: 53vh;
+  box-shadow: inset 2px 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+pre {
+  margin: 0;
+  max-width: 35vw;
+  max-height: 53vh;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  font-size: small;
+}
+::-webkit-scrollbar {
+  width: 0;
+}
+
+.imgdiv {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.imgdiv div {
+  padding: 0;
+  max-height: min-content;
+}
+
+img {
+  height: 53vh;
+  width: auto;
+  margin: 0;
+  margin-left: 10%;
+}
+
+.output {
+  margin-top: 2%;
+}
+
+@media screen and (max-width: 1280px) {
+  .output {
+    margin-top: 0.8%;
+  }
+}
+
+input {
+  border: 1px solid black;
+  border-radius: 10px;
+  background-color: white;
+  width: 90%;
+  height: 17vh;
+  box-shadow: inset 2px 2px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  text-overflow: ellipsis;
+}

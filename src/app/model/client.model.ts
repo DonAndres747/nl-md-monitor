@@ -8,17 +8,19 @@ export class ClientModel {
   constructor(private cookieService: CookieService) {}
 
   private clientIdKey = 'clientId';
-  private userKey = 'user';
+  private userKey = 'user1';
   private dbNameKey = 'dbName';
   private connectionUrlKey = 'connectionUrl';
-  private userNameKey = 'userName';
+  private userNameKey = 'userName1';
   private wmsKey = 'wmsKey';
   private tepKey = 'tepKey';
   private sapKey = 'sapKey';
 
+  private expirationHours = 1;
+
   private getExpirationDate(): Date {
     const expirationDate = new Date();
-    expirationDate.setHours(expirationDate.getHours() + 1);
+    expirationDate.setHours(expirationDate.getHours() + this.expirationHours);
     return expirationDate;
   }
 
@@ -27,8 +29,11 @@ export class ClientModel {
   }
 
   setClientId(clientId: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.clientIdKey, clientId, expirationDate);
+    this.cookieService.set(
+      this.clientIdKey,
+      clientId,
+      this.getExpirationDate()
+    );
   }
 
   getUser(): string {
@@ -36,8 +41,7 @@ export class ClientModel {
   }
 
   setUser(user: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.userKey, user, expirationDate);
+    this.cookieService.set(this.userKey, user, this.getExpirationDate());
   }
 
   getDbName(): string {
@@ -45,8 +49,7 @@ export class ClientModel {
   }
 
   setDbName(dbName: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.dbNameKey, dbName, expirationDate);
+    this.cookieService.set(this.dbNameKey, dbName, this.getExpirationDate());
   }
 
   getConnectionUrl(): string {
@@ -54,11 +57,10 @@ export class ClientModel {
   }
 
   setConnectionUrl(connectionUrl: string): void {
-    const expirationDate = this.getExpirationDate();
     this.cookieService.set(
       this.connectionUrlKey,
       connectionUrl,
-      expirationDate
+      this.getExpirationDate()
     );
   }
 
@@ -67,8 +69,7 @@ export class ClientModel {
   }
 
   setUserName(name: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.userNameKey, name, expirationDate);
+    this.cookieService.set(this.userNameKey, name, this.getExpirationDate());
   }
 
   getWmsKey(): string {
@@ -76,8 +77,7 @@ export class ClientModel {
   }
 
   setWmsKey(key: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.wmsKey, key, expirationDate);
+    this.cookieService.set(this.wmsKey, key, this.getExpirationDate());
   }
 
   getTepKey(): string {
@@ -85,17 +85,15 @@ export class ClientModel {
   }
 
   setTep(key: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.tepKey, key, expirationDate);
+    this.cookieService.set(this.tepKey, key, this.getExpirationDate());
   }
 
-  getSapkey(): string {
+  getSapKey(): string {
     return this.cookieService.get(this.sapKey) || '';
   }
 
   setSapKey(key: string): void {
-    const expirationDate = this.getExpirationDate();
-    this.cookieService.set(this.sapKey, key, expirationDate);
+    this.cookieService.set(this.sapKey, key, this.getExpirationDate());
   }
 
   clear(): void {
@@ -104,8 +102,15 @@ export class ClientModel {
     this.cookieService.delete(this.dbNameKey);
     this.cookieService.delete(this.connectionUrlKey);
     this.cookieService.delete(this.userNameKey);
-    this.cookieService.delete(this.userNameKey);
-    this.cookieService.delete(this.userNameKey);
-    this.cookieService.delete(this.userNameKey);
+    this.cookieService.delete(this.wmsKey);
+    this.cookieService.delete(this.tepKey);
+    this.cookieService.delete(this.sapKey);
+    const allCookies: { [key: string]: string } = this.cookieService.getAll();
+    for (const cookieName in allCookies) {
+      if (allCookies.hasOwnProperty(cookieName)) {
+        this.cookieService.delete(cookieName);
+      }
+    }
+    this.cookieService.deleteAll('/', 'xyz.net');
   }
 }

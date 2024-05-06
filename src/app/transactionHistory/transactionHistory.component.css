@@ -1,0 +1,188 @@
+body {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.container {
+  border-right: 1px solid black;
+  box-shadow: 1px 1px 5px 2px rgba(43, 42, 42, 0.2);
+  height: 100%;
+  min-width: 17%;
+  padding: 2%;
+}
+
+@media screen and (max-width: 1280px) {
+  .container {
+    min-width: 23%;
+  }
+}
+
+.containerHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+h1 {
+  font-weight: 800;
+  margin: 0;
+  margin-bottom: 1%;
+}
+
+.filtersOpt,
+.searchFilters {
+  width: 60%;
+  height: 2em;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.filtersOpt .calendarIcon {
+  color: rgb(255, 103, 32);
+  margin: 0 1% 1% 0;
+}
+
+.searchFilters {
+  width: 80%;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.filtersOpt .searchFilters input {
+  width: 80%;
+  height: 75%;
+  border: 0;
+  outline: none;
+  margin-left: 2%;
+}
+ 
+
+.filtersOpt .searchFilters mat-icon {
+}
+
+.titleLine {
+  width: 100%;
+  height: 2px;
+  background-color: black;
+}
+
+.trasactionContainer {
+  max-height: 100%;
+}
+
+.transaction-header-list {
+  padding: 1.5%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 85%;
+  min-width: max-content;
+}
+
+@media screen and (max-width: 1280px) {
+  .transaction-header-list {
+    height: 75%;
+  }
+}
+
+.transaction-header-list::-webkit-scrollbar {
+  width: 0;
+}
+
+.transaction-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid;
+  border-color: black;
+  border-radius: 10px;
+  min-width: calc(max-content+20px);
+  height: max-content;
+  box-shadow: 2px 2px 4px 2px rgba(0, 0, 0, 0.2);
+  margin-top: 5%;
+}
+
+.transaction-header-selected {
+  background-color: lightgray;
+}
+
+.transaction-header:active {
+  transform: scale(0.95);
+}
+
+h6 {
+  margin: 5px 9px -4% 9px;
+  color: rgb(255, 103, 32);
+  align-self: baseline;
+}
+
+.header-tittle {
+  display: flex;
+  flex-direction: row;
+  margin: 0 10px;
+}
+
+.header-tittle h2,
+.header-tittle h3 {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 110%;
+  min-width: max-content;
+  align-content: center;
+}
+
+.header-tittle .arrow {
+  margin: 0 2%;
+}
+
+.line {
+  width: 100%;
+  height: 4px;
+  background-color: black;
+  margin: 0 0 10px 0;
+}
+
+.transaction-header-foot {
+  flex-direction: row;
+  display: flex;
+  justify-content: space-between;
+  min-width: 100%;
+}
+
+.transaction-header-foot p {
+  color: grey;
+  margin-left: 5%;
+  font-size: 80%;
+}
+
+@media screen and (max-width: 1280px) {
+  .transaction-header-foot p {
+    font-size: 75%;
+  }
+}
+
+.status {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 5%;
+}
+
+.statusOk {
+  background-color: green;
+  border: 2px solid darkgreen;
+}
+
+.statusErr {
+  background-color: red;
+  border: 2px solid darkred;
+}
+
+.details {
+  flex: 1;
+}

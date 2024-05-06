@@ -39,15 +39,13 @@ export class SidenavComponent implements OnChanges, OnInit {
           item.available = this.clientModel.getTepKey();
           break;
         case 'SAP':
-          item.available = this.clientModel.getSapkey();
+          item.available = this.clientModel.getSapKey();
           break;
 
         default:
           break;
       }
     });
-
-    
   }
 
   ngOnChanges(changes: SimpleChanges) {

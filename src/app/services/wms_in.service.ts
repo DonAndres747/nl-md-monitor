@@ -6,7 +6,7 @@ import {
 } from '@angular/common/http';
 import { Observable, catchError, elementAt, map, throwError } from 'rxjs';
 import * as properties from '../../../properties.json';
-import { transactionModel } from '../model/transaction.model';
+import { transactionModel } from '../model/transaction.model'; 
 
 @Injectable({
   providedIn: 'root',

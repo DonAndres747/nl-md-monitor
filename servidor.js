@@ -19,7 +19,7 @@ const clientsModel = mongoose.model("credentials", {
 
 app.post("/api/login", async (req, res) => {
   const { usr_id, password } = req.body;
-
+  
   await mongoose.disconnect();
 
   await mongoose.connect(
@@ -40,6 +40,7 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
+    
     res.status(200).json({
       clientId: client.id,
       user: client.usr_id,
@@ -60,7 +61,7 @@ const transactionSchema = new mongoose.Schema({
   sequence: String,
   interface: String,
   fromJson: String,
-  toJson: String,
+  toJson: Object,
   status: String,
   recordDate: String,
   fromHost: String,
@@ -71,6 +72,7 @@ const transactionSchema = new mongoose.Schema({
 app.post("/db/in", async (req, res) => {
   const { dbName, sol } = req.body;
 
+  await mongoose.disconnect();
   await mongoose
     .connect(
       `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
@@ -100,7 +102,7 @@ app.post("/db/in", async (req, res) => {
             message: transaction.message,
           });
         });
-
+        result.reverse();
         res.status(200).json({ result });
       } catch (error) {
         console.log(error);

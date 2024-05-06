@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
-// import { AuthService } from './auth.service';
+import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AuthenticationService } from '../app/services/authentication.service';
+import { ClientModel } from './model/client.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +9,32 @@ import { AuthenticationService } from '../app/services/authentication.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private authService: AuthenticationService,
-    private router: Router
+    private router: Router,
+    private clientModel: ClientModel
   ) {}
 
-  canActivate(): boolean {
-    if (this.authService.isLoggedIn()) {
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const sol = route.paramMap.get('sol');
+
+    const solution = sol
+      ? sol == 'wms'
+        ? this.clientModel.getWmsKey()
+        : sol == 'tep'
+        ? this.clientModel.getTepKey()
+        : this.clientModel.getSapKey()
+      : 'true';
+
+    console.log(sol, '  ', solution);
+    console.log(
+      "this.authService.isLoggedIn() && solution == 'true'",
+      this.authService.isLoggedIn() && solution == 'true'
+    );
+
+    if (this.authService.isLoggedIn() && solution == 'true') {
       return true;
     } else {
       this.router.navigate(['/']);
       return false;
     }
-
   }
 }

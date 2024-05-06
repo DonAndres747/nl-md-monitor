@@ -1,0 +1,52 @@
+<body>
+  <div class="container">
+    <div class="containerHeader">
+      <h1>{{ solution }}</h1>
+
+      <div class="filtersOpt">
+        <mat-icon class="calendarIcon">date_range</mat-icon>
+        <div class="searchFilters">
+          <input
+            type="text"
+            [(ngModel)]="filter"
+            placeholder="Filtros"
+            (ngModelChange)="onChange()"
+          />
+          <mat-icon>drag_indicator</mat-icon>
+        </div>
+      </div>
+    </div>
+    <div class="titleLine"></div>
+    <div class="transaction-header-list">
+      @for(trans of filteredTransactions ; track trans.id ; let idx= $index; ){
+      <div
+        class="transaction-header"
+        [ngClass]="isSelected(idx) ? 'transaction-header-selected' : ''"
+        (click)="showDetails(trans.id, idx)"
+      >
+        <h6>{{ trans.sequence }}</h6>
+        <div class="header-tittle">
+          <h2>{{ trans.fromHost }} - {{ trans.toHost }}</h2>
+          <h2 class="arrow">➟</h2>
+          <h3>
+            {{ trans.interface }}
+          </h3>
+        </div>
+        <div class="line"></div>
+        <div class="transaction-header-foot">
+          <p>{{ getFormattedDate(trans.recordDate) }}</p>
+          <div
+            class="status"
+            [ngClass]="trans.status == 'OK' ? 'statusOk' : 'statusErr'"
+          ></div>
+        </div>
+      </div>
+      }@empty{
+      <p>no transactions found</p>
+      }
+    </div>
+  </div>
+  <div class="details">
+    <router-outlet />
+  </div>
+</body>

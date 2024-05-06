@@ -14,14 +14,6 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  /*   urlLogin: string = 'http://localhost:9000/nl/auth';
-  constructor(private httpClient: HttpClient) {}
-
-  loginAuthentication(username: string, password: string) {
-    const body = { "usr_id": username, "password": password };
-    return this.httpClient.post(this.urlLogin, body);
-  } */
-
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -36,6 +28,7 @@ export class AuthenticationService {
     const body = { usr_id: username, password: password };
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
+    this.clientModel.clear();
     return this.http.post<any>(this.urlLogin, body, { headers }).pipe(
       map((response) => {
         this.clientModel.setClientId(response.clientId);
@@ -43,6 +36,12 @@ export class AuthenticationService {
         this.clientModel.setDbName(response.dbName);
         this.clientModel.setConnectionUrl(response.connectionUrl);
         this.clientModel.setUserName(response.userName);
+        // console.log('response.user', response.user);
+        // console.log('response.username', response.username);
+        // console.log('response.dbName', response.dbName);
+        // console.log('response.connectionUrl', response.connectionUrl);
+        // console.log('Model', this.clientModel.getUser());
+        // console.log('Model', this.clientModel.getDbName());
 
         this.isLogged = true;
 

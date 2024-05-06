@@ -1,16 +1,16 @@
 body {
   background-color: rgb(0, 38, 58);
+  background-image: url("../../assets/fondo-log.jpg");
+ 
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 main {
   min-height: 95%;
-  background-image: url("../../assets/fondo-log.jpg");
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 div.login {
@@ -85,7 +85,7 @@ a {
   flex-direction: column;
 }
 
-p {  
+p {
   color: rgb(199, 10, 10);
 }
 
