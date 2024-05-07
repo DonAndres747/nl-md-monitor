@@ -55,13 +55,22 @@ export class SidenavComponent implements OnChanges, OnInit {
         item.selected = false;
       });
     } else {
-      //  console.log("Menu", this.menu());
     }
+  }
+
+  selectFromTittle(idx: number) {
+    !this.navData.find((item) => item.selected === true)
+      ? this.selectItem(idx)
+      : '';
+  }
+
+  selectFromTittleHover() {
+    return !this.navData.find((item) => item.selected === true);
   }
 
   selectItem(index: number) {
     const selectedElement = this.navData.find((item) => item.selected === true);
-    if (this.navData[index].selected || !selectedElement) {
+    if ((!selectedElement && !this.collapsed) || this.navData[index].selected) {
       this.collapsed = !this.collapsed;
       this.collapsedChange.emit(this.collapsed);
     }

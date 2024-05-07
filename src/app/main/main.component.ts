@@ -27,6 +27,7 @@ export class MainComponent {
 
   logOut() {
     this.clearCookies();
+    this.clientModel.clear();
     this.router.navigate(['/']);
   }
 

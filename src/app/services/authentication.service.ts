@@ -36,12 +36,6 @@ export class AuthenticationService {
         this.clientModel.setDbName(response.dbName);
         this.clientModel.setConnectionUrl(response.connectionUrl);
         this.clientModel.setUserName(response.userName);
-        // console.log('response.user', response.user);
-        // console.log('response.username', response.username);
-        // console.log('response.dbName', response.dbName);
-        // console.log('response.connectionUrl', response.connectionUrl);
-        // console.log('Model', this.clientModel.getUser());
-        // console.log('Model', this.clientModel.getDbName());
 
         this.isLogged = true;
 
@@ -82,7 +76,6 @@ export class AuthenticationService {
             }
             case 'sap': {
               const key = element.service != null && element.service != '';
-              console.log(key.toString(), element.id);
               this.clientModel.setSapKey(key.toString());
               break;
             }

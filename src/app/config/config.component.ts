@@ -53,8 +53,7 @@ export class ConfigComponent implements OnInit {
         this.val1, //valor a setear en tep
         this.val2 //valor a setear en wms o sap dependiendo de solution,
       )
-      .subscribe((response) => {
-        console.log(response);
+      .subscribe((response) => { 
 
         response == 'Success' ? this.refreshRoute() : '';
       });

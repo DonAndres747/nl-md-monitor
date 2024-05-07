@@ -18,7 +18,9 @@
         }@else{
         <button
           *ngIf="data.available == 'true'"
-          [ngClass]="data.selected ? 'sidenav-nav-item-selected' : ''"
+          [ngClass]="
+            data.selected && !data.iconType ? 'sidenav-nav-item-selected' : ''
+          "
           (click)="selectItem(idx)"
         >
           {{ data.icon }}
@@ -27,10 +29,12 @@
         <div
           class="elements-body"
           *ngIf="!data.selected ? menu() : data.selected"
+          [ngClass]="selectFromTittleHover() ? 'itemTittle' : ''"
         >
           <h1
             [ngClass]="!data.selected && menu() ? 'h1ShowAll' : ''"
-            *ngIf="!data.selected ? menu() : data.selected"
+            *ngIf="data.available == 'true'"
+            (click)="selectFromTittle(idx)"
           >
             {{ data.id }}
           </h1>
