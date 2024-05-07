@@ -4,15 +4,41 @@
       <h1>{{ solution }}</h1>
 
       <div class="filtersOpt">
-        <mat-icon class="calendarIcon">date_range</mat-icon>
+        <div class="datePickerDiv">
+          <div class="dates">
+            <input
+              matInput
+              [matDatepicker]="picker"
+              [value]="startDate ? startDate : ''"
+              class="datePicker"
+              (click)="handleDatesPicker()"
+              readonly
+            />
+            <input
+              matInput
+              [matDatepicker]="picker2"
+              [value]="endDate ? endDate : ''"
+              class="datePicker"
+              (click)="handleDatesPicker()"
+              readonly
+            />
+          </div>
+          <mat-icon class="calendarIcon" (click)="handleDatesPicker()">{{
+            !startDate && !endDate ? "date_range" : "event_busy"
+          }}</mat-icon>
+          <mat-datepicker touchUi #picker></mat-datepicker>
+          <mat-datepicker touchUi #picker2></mat-datepicker>
+        </div>
         <div class="searchFilters">
           <input
             type="text"
             [(ngModel)]="filter"
             placeholder="Filtros"
-            (ngModelChange)="onChange()"
+            (ngModelChange)="applyFieldFilter()"
           />
-          <mat-icon>drag_indicator</mat-icon>
+          <mat-icon (click)="filter == '' ? '' : clearStringFilter()">{{
+            filter == "" ? "drag_indicator" : "clear"
+          }}</mat-icon>
         </div>
       </div>
     </div>

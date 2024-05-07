@@ -24,12 +24,6 @@ export class AuthGuard implements CanActivate {
         : this.clientModel.getSapKey()
       : 'true';
 
-    console.log(sol, '  ', solution);
-    console.log(
-      "this.authService.isLoggedIn() && solution == 'true'",
-      this.authService.isLoggedIn() && solution == 'true'
-    );
-
     if (this.authService.isLoggedIn() && solution == 'true') {
       return true;
     } else {

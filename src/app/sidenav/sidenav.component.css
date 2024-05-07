@@ -2,7 +2,7 @@
   background: linear-gradient(
     to right,
     rgba(76, 102, 115, 1) 4rem,
-    rgb(77, 93, 116) 4rem
+    rgba(77, 93, 116, 0.8) 4rem /* rgb(77, 93, 116) 4rem sin transparencia */
   );
   transition: width 0.5s ease;
   position: fixed;
@@ -63,9 +63,11 @@ span {
 }
 
 span:hover,
-.item-element a:hover {
+.item-element a:hover,
+.itemTittle:hover {
   background-color: white;
   color: rgb(0, 38, 58);
+  transition: all 0.3s ease;
 }
 
 .sidenav-nav-item:hover button,

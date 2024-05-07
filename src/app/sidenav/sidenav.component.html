@@ -27,10 +27,12 @@
         <div
           class="elements-body"
           *ngIf="!data.selected ? menu() : data.selected"
+          [ngClass]="selectFromTittleHover() ? 'itemTittle' : ''"
         >
           <h1
             [ngClass]="!data.selected && menu() ? 'h1ShowAll' : ''"
-            *ngIf="!data.selected ? menu() : data.selected"
+            *ngIf="data.available == 'true'"
+            (click)="selectFromTittle(idx)"
           >
             {{ data.id }}
           </h1>

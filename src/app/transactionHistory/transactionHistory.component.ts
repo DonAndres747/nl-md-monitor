@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { WmsService } from '../services/wms_in.service';
 import { SapService } from '../services/sap_in.service';
@@ -8,11 +8,38 @@ import { ClientModel } from '../model/client.model';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute } from '@angular/router';
+import {
+  MatDatepicker,
+  MatDatepickerModule,
+} from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YY',
+  },
+  display: {
+    dateInput: 'DD/MM/YY',
+    monthYearLabel: 'MM/YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MM/YYYY',
+  },
+};
 
 @Component({
   selector: 'app-wms',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatIconModule],
+  providers: [provideMomentDateAdapter(MY_FORMATS)],
+  imports: [
+    FormsModule,
+    CommonModule,
+    RouterModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './transactionHistory.component.html',
   styleUrl: './transactionHistory.component.css',
 })
@@ -34,6 +61,10 @@ export class transactionComponent implements OnInit {
   dbName: string = '';
   selectedTransaction: any;
   selected: number = -1;
+  @ViewChild('picker') picker!: MatDatepicker<any>;
+  @ViewChild('picker2') picker2!: MatDatepicker<any>;
+  startDate: any = null;
+  endDate: any = null;
 
   ngOnInit(): void {
     this.rutaActiva.paramMap.subscribe((params) => {
@@ -46,7 +77,9 @@ export class transactionComponent implements OnInit {
             result.result.map((transaction: any) => {
               this.transactions.push(transaction);
             });
-            this.showDetails(result.result[0].id, 0);
+            result.result[0]
+              ? this.showDetails(result.result[0].id, 0)
+              : (this.filteredTransactions = []);
           });
           break;
         case 'TEP':
@@ -54,8 +87,9 @@ export class transactionComponent implements OnInit {
             result.result.map((transaction: any) => {
               this.transactions.push(transaction);
             });
-
-            this.showDetails(result.result[0].id, 0);
+            result.result[0]
+              ? this.showDetails(result.result[0].id, 0)
+              : (this.filteredTransactions = []);
           });
           break;
         case 'SAP':
@@ -63,19 +97,16 @@ export class transactionComponent implements OnInit {
             result.result.map((transaction: any) => {
               this.transactions.push(transaction);
             });
-            this.showDetails(result.result[0].id, 0);
+            result.result[0]
+              ? this.showDetails(result.result[0].id, 0)
+              : (this.filteredTransactions = []);
           });
           break;
-
         default:
           break;
       }
     });
-  }
-
-  onChange() {
-    this.applyFieldFilter();
-  }
+  } 
 
   async showDetails(id: string, index: number) {
     await this.applyFieldFilter();
@@ -90,19 +121,83 @@ export class transactionComponent implements OnInit {
     );
   }
 
-  applyFieldFilter() {
-    if (this.filter) {
-      const filtroLower = this.filter.toLowerCase();
-      this.filteredTransactions = this.transactions.filter((transaction) =>
-        this.camposFiltro.some(
-          (field) =>
-            transaction[field] &&
-            typeof transaction[field] === 'string' &&
-            transaction[field].toLowerCase().includes(filtroLower)
-        )
+  handleDatesPicker() {
+    !this.startDate && !this.endDate
+      ? this.pickDatesFilter()
+      : this.clearDates();
+  }
+
+  pickDatesFilter() {
+    this.picker.open();
+    this.picker.closedStream.subscribe(() => {
+      if (this.picker2) {
+        this.picker2.open();
+        this.picker2.closedStream.subscribe(() => {
+          this.startDate = this.picker.startAt ? this.picker.startAt._d : null;
+          this.endDate = this.picker2.startAt
+            ? this.picker2.startAt._d
+            : this.picker.startAt
+            ? new Date(new Date().getFullYear(), 11, 31)
+            : null;
+
+          if (this.startDate > this.endDate) {
+            const newEnd = this.startDate;
+            this.startDate = this.endDate;
+            this.endDate = newEnd;
+          } else if (this.endDate && !this.startDate) {
+            this.startDate = this.picker2.startAt._d;
+            this.endDate = new Date(new Date().getFullYear(), 11, 31);
+          }
+          this.datesFilter();
+        });
+      }
+    });
+  }
+
+  datesFilter() {
+    if (this.startDate && this.endDate) {
+      this.filteredTransactions = this.filteredTransactions.filter(
+        (transaction) => {
+          return (
+            new Date(transaction.recordDate) >=
+              this.startDate.setHours(0, 0, 0, 0) &&
+            new Date(transaction.recordDate) <=
+              this.endDate.setHours(23, 59, 59, 999)
+          );
+        }
       );
     } else {
       this.filteredTransactions = this.transactions;
+      this.filter ? this.applyFieldFilter() : '';
+    }
+  }
+
+  clearDates() {
+    this.startDate = null;
+    this.endDate = null;
+    this.datesFilter();
+  }
+
+  clearStringFilter() {
+    this.filter = '';
+    this.applyFieldFilter();
+  }
+
+  applyFieldFilter() {
+    if (this.filter) {
+      const filtroLower = this.filter.toLowerCase();
+      this.filteredTransactions = this.filteredTransactions.filter(
+        (transaction) =>
+          this.camposFiltro.some(
+            (field) =>
+              transaction[field] &&
+              typeof transaction[field] === 'string' &&
+              transaction[field].toLowerCase().includes(filtroLower)
+          )
+      );
+    } else {
+      this.filteredTransactions = this.transactions;
+      this.startDate ? this.datesFilter() : '';
     }
   }
 
