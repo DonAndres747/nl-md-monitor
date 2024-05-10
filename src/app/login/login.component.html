@@ -13,6 +13,7 @@
             [(ngModel)]="username"
             name="username"
             [ngClass]="error ? 'errorInput' : ''"
+            (keyup.enter)="onEnterKeyPress($event)"
           />
         </div>
         <!--  -->
@@ -23,6 +24,7 @@
             [(ngModel)]="password"
             name="password"
             [ngClass]="error ? 'errorInput' : ''"
+            (keyup.enter)="onEnterKeyPress($event)"
           />
         </div>
         <a

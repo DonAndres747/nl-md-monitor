@@ -19,7 +19,7 @@ const clientsModel = mongoose.model("credentials", {
 
 app.post("/api/login", async (req, res) => {
   const { usr_id, password } = req.body;
-  
+
   await mongoose.disconnect();
 
   await mongoose.connect(
@@ -40,7 +40,6 @@ app.post("/api/login", async (req, res) => {
       return res.status(401).json({ message: "Credenciales inválidas" });
     }
 
-    
     res.status(200).json({
       clientId: client.id,
       user: client.usr_id,
@@ -111,17 +110,11 @@ app.post("/db/in", async (req, res) => {
     });
 });
 
-const connectionSchemaWMS = new mongoose.Schema({
+const connectionModel = mongoose.model("connections", {
   id: String,
-  tep: String,
-  sap: String,
-  service: String,
-});
-
-const connectionSchemaSAP = new mongoose.Schema({
-  id: String,
-  tep: String,
-  wms: String,
+  url: Object,
+  login: String,
+  tenantId: String,
   service: String,
 });
 
@@ -129,21 +122,12 @@ app.post("/db/connections", async (req, res) => {
   const { dbName, connectionId } = req.body;
 
   await mongoose.disconnect();
+
   await mongoose
     .connect(
       `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
     )
     .then(async () => {
-      if (mongoose.connection.models["connections"]) {
-        delete mongoose.connection.models["connections"];
-      }
-
-      const connectionModel = mongoose.model(
-        "connections",
-        connectionId == "wms" ? connectionSchemaWMS : connectionSchemaSAP,
-        "connections"
-      );
-
       try {
         const connections = await connectionModel.find({ id: connectionId });
         if (!connections) {

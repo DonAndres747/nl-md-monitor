@@ -12,6 +12,7 @@
               [value]="startDate ? startDate : ''"
               class="datePicker"
               (click)="handleDatesPicker()"
+              [max]="actualDate"
               readonly
             />
             <input
@@ -20,6 +21,7 @@
               [value]="endDate ? endDate : ''"
               class="datePicker"
               (click)="handleDatesPicker()"
+              [max]="actualDate"
               readonly
             />
           </div>
@@ -27,7 +29,7 @@
             !startDate && !endDate ? "date_range" : "event_busy"
           }}</mat-icon>
           <mat-datepicker touchUi #picker></mat-datepicker>
-          <mat-datepicker touchUi #picker2></mat-datepicker>
+          <mat-datepicker touchUi #picker2> </mat-datepicker>
         </div>
         <div class="searchFilters">
           <input
@@ -36,9 +38,10 @@
             placeholder="Filtros"
             (ngModelChange)="applyFieldFilter()"
           />
-          <mat-icon (click)="filter == '' ? '' : clearStringFilter()">{{
-            filter == "" ? "drag_indicator" : "clear"
-          }}</mat-icon>
+          <mat-icon
+            (click)="filter == '' ? abrirModal() : clearStringFilter()"
+            >{{ filter == "" ? "drag_indicator" : "clear" }}</mat-icon
+          >
         </div>
       </div>
     </div>

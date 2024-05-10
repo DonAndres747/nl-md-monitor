@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const allCookies: { [key: string]: string } = this.cookieService.getAll(); 
+    const allCookies: { [key: string]: string } = this.cookieService.getAll();
 
     for (const cookieName in allCookies) {
       this.clientModel.clear();
@@ -56,5 +56,11 @@ export class LoginComponent implements OnInit {
             alert('Error inesperado'))
           : '';
       });
+  }
+
+  onEnterKeyPress(event: any) {
+    if (event.key === 'Enter') {
+      this.onSubmit();
+    }
   }
 }

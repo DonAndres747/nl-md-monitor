@@ -1,0 +1,36 @@
+<body>
+  <h2>FILTROS</h2>
+  <div>
+    <div class="line">
+      <label for="Sequence">Sequence:</label>
+      <input type="text" name="sequence" [(ngModel)]="sequence" />
+      <label for="interface">Interface:</label>
+      <input type="text" name="interface" [(ngModel)]="interface" />
+      <button (click)="cerrarModal()">Limpiar</button>
+    </div>
+    <div class="line">
+      <label for="fromHost">From host:</label>
+      <input type="text" name="fromHost" [(ngModel)]="fromHost" />
+      <label for="status">Status:</label>
+      <select name="status" id="status" [(ngModel)]="status">
+        <option style="color:green" value="Ok">Ok</option>
+        <option style="color:red" value="Error">Error</option>
+      </select>
+      <button
+        [ngClass]=""
+        (click)="
+          enableApply()
+            ? applyFieldFilter({
+                sequence: sequence,
+                interface: interface,
+                fromHost: fromHost,
+                status: status
+              })
+            : ''
+        "
+      >
+        Aplicar
+      </button>
+    </div>
+  </div>
+</body>
