@@ -30,18 +30,14 @@ export class ConfigService {
     );
   }
 
-
   updateConnections(
     solId: string,
-    field1: string,
-    field2: string,
     serviceVal: string,
-    field1Val: string,
-    field2Val: string
+    urls: Object
   ): Observable<any> {
     const urlLogin: string = `http://${properties.services.host}:${properties.services.port}/db/updateConnections`;
 
-    const body = { solId, field1, field2, serviceVal, field1Val, field2Val };
+    const body = { solId, serviceVal, urls };
 
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 

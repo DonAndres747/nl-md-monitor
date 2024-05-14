@@ -3,9 +3,13 @@
   <div class="inline"></div>
   <h1>Configura tus URL para {{ solution }}</h1>
   <div class="section">
-    <h2>Servicio</h2>
+    <h2>{{ solution == "TEP" ? "Login" : "Servicio" }}</h2>
     <label for="current">Actual URL:</label>
-    <input class="readonly" readonly value="{{ serviceUrl }}" />
+    <input
+      class="readonly"
+      readonly
+      value="{{ solution == 'TEP' ? login : service }}"
+    />
     <label for="current">Nueva URL:</label>
     <input [(ngModel)]="serviceVal" name="serviceVal" />
   </div>
@@ -13,15 +17,13 @@
     <h2>Endpoint</h2>
     <div class="section2">
       <div class="Endpoint-sec">
-        <label for="current">Actual TEP EP:</label>
-        <input class="readonly" readonly value="{{ end1 }}" />
+        <label for="current">Actual {{ endName1 }} EP:</label>
+        <input class="readonly" readonly value=" {{ end1 }} " />
         <label for="current">Nuevo EP:</label>
         <input [(ngModel)]="val1" name="val1" />
       </div>
       <div class="Endpoint-sec">
-        <label for="current"
-          >Actual {{ solution == "WMS" ? "SAP" : "WMS" }} EP:
-        </label>
+        <label for="current">Actual {{ endName2 }} EP: </label>
         <input class="readonly" readonly value="{{ end2 }}" />
         <label for="current">Nuevo EP:</label>
         <input [(ngModel)]="val2" name="val2" />

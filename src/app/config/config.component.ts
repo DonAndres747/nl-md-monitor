@@ -20,9 +20,13 @@ export class ConfigComponent implements OnInit {
   ) {}
 
   solution: any;
-  serviceUrl: String = '';
-  end1: String = '';
-  end2: String = '';
+  id: String = '';
+  end1: any = '';
+  end2: any = '';
+  endName1: any = '';
+  endName2: any = '';
+  login: String = '';
+  service: String = '';
   dbName: any;
   serviceVal: string = '';
   val1: string = '';
@@ -36,32 +40,31 @@ export class ConfigComponent implements OnInit {
       this.configService
         .getConnectionsUrls(this.dbName, this.solution.toLowerCase())
         .subscribe((response) => {
-          this.end1 = response.tep;
-          this.end2 = this.solution == 'WMS' ? response.sap : response.wms;
-          this.serviceUrl = response.service;
+          (this.id = response.id),
+            (this.end1 = Object.values(response.url)[0]),
+            (this.end2 = Object.values(response.url)[1]),
+            (this.endName1 = Object.keys(response.url)[0]),
+            (this.endName2 = Object.keys(response.url)[1]),
+            (this.service = response.service),
+            (this.login = response.login);
         });
     });
   }
 
   updateConnections() {
     this.configService
-      .updateConnections(
-        this.solution.toLowerCase(),
-        'tep',
-        this.solution == 'WMS' ? 'sap' : 'wms',
-        this.serviceVal,
-        this.val1, //valor a setear en tep
-        this.val2 //valor a setear en wms o sap dependiendo de solution,
-      )
-      .subscribe((response) => { 
-
+      .updateConnections(this.solution.toLowerCase(), this.serviceVal, {
+        [this.endName1]: this.val1 || this.end1,
+        [this.endName2]: this.val2 || this.end2,
+      })
+      .subscribe((response) => {
         response == 'Success' ? this.refreshRoute() : '';
       });
   }
 
   active() {
     return !(
-      (this.serviceUrl != this.serviceVal && this.serviceVal != '') ||
+      (this.service != this.serviceVal && this.serviceVal != '') ||
       (this.end1 != this.val1 && this.val1 != '') ||
       (this.end2 != this.val2 && this.val2 != '')
     );
@@ -74,7 +77,7 @@ export class ConfigComponent implements OnInit {
   }
 
   refreshRoute() {
-    alert('URL actualizada con exito'); 
+    alert('URL actualizada con exito');
     window.location.reload();
   }
 }

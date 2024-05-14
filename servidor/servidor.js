@@ -1,4 +1,4 @@
-const properties = require("./properties.json");
+const properties = require("../properties.json");
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
@@ -8,14 +8,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-const clientsModel = mongoose.model("credentials", {
-  id: String,
-  usr_id: String,
-  password: String,
-  connectionurl: String,
-  dbname: String,
-  name: String,
-});
+const clientsModel = require("./models/clientModel");
 
 app.post("/api/login", async (req, res) => {
   const { usr_id, password } = req.body;
@@ -110,13 +103,7 @@ app.post("/db/in", async (req, res) => {
     });
 });
 
-const connectionModel = mongoose.model("connections", {
-  id: String,
-  url: Object,
-  login: String,
-  tenantId: String,
-  service: String,
-});
+const connectionModel = require("./models/connectionModel");
 
 app.post("/db/connections", async (req, res) => {
   const { dbName, connectionId } = req.body;
@@ -142,66 +129,22 @@ app.post("/db/connections", async (req, res) => {
     });
 });
 
-const connectionSchemaAll = new mongoose.Schema({
-  id: String,
-  service: String,
-});
-
-app.post("/db/connectionsAll", async (req, res) => {
-  const { dbName } = req.body;
-
-  await mongoose.disconnect().then(async () => {
-    await mongoose
-      .connect(
-        `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
-      )
-      .then(async () => {
-        delete mongoose.connection.models["connections"];
-        const connectionModel = mongoose.model(
-          "connections",
-          connectionSchemaAll,
-          "connections"
-        );
-
-        try {
-          const connections = await connectionModel.find();
-          if (!connections) {
-            return res.status(404).json({ message: "No data found" });
-          }
-
-          enableConn = connections.map((conn) => {
-            return { id: conn.id, service: conn.service };
-          });
-
-          res.status(200).json(enableConn);
-        } catch (error) {
-          console.log(error);
-          res.status(500).json({ message: "Error interno del servidor" });
-        }
-      });
-  });
-});
-
 app.put("/db/updateConnections", async (req, res) => {
-  const { solId, field1, field2, serviceVal, field1Val, field2Val } = req.body;
+  const { solId, urls, serviceVal } = req.body;
 
   updatedFields = {};
 
-  if (field1Val) {
-    updatedFields[field1] = field1Val;
-  }
-  if (field2Val) {
-    updatedFields[field2] = field2Val;
-  }
-  if (serviceVal) {
-    updatedFields.service = serviceVal;
+  if (urls) {
+    updatedFields.url = { ...urls };
   }
 
-  const connectionModel = mongoose.model(
-    "connections",
-    solId == "wms" ? connectionSchemaWMS : connectionSchemaSAP,
-    "connections"
-  );
+  if (serviceVal && solId != "tep") {
+    updatedFields.service = serviceVal;
+  } else if (serviceVal) {
+    updatedFields.login = serviceVal;
+  }
+
+  console.log(updatedFields, solId);
 
   try {
     const result = await connectionModel.updateOne(
@@ -220,6 +163,39 @@ app.put("/db/updateConnections", async (req, res) => {
     console.log(error);
     res.status(500).json(error);
   }
+});
+
+app.post("/db/connectionsAll", async (req, res) => {
+  const { dbName } = req.body;
+
+  await mongoose.disconnect().then(async () => {
+    await mongoose
+      .connect(
+        `mongodb://${properties.database.host}:${properties.database.port}/${dbName}`
+      )
+      .then(async () => {
+        delete mongoose.connection.models["connections"];
+
+        try {
+          const connections = await connectionModel.find();
+          if (!connections) {
+            return res.status(404).json({ message: "No data found" });
+          }
+
+          enableConn = connections.map((conn) => {
+            return {
+              id: conn.id,
+              service: conn.id == "tep" ? conn.login : conn.service,
+            };
+          });
+
+          res.status(200).json(enableConn);
+        } catch (error) {
+          console.log(error);
+          res.status(500).json({ message: "Error interno del servidor" });
+        }
+      });
+  });
 });
 
 const PORT = 3000;
