@@ -36,15 +36,35 @@ export class DashboardComponent implements OnInit {
   wmsChart: any[] = [];
   sapChart: any[] = [];
   tepChart: any[] = [];
+  isLargeScreen: boolean = false;
 
   porcentajeAncho: number = 0;
   porcentajeAltura: number = 0;
 
   view: [number, number] = [0, 0];
 
+  ngOnInit(): void {
+    this.name = this.clientModel.getUserName();
+    this.dbName = this.clientModel.getDbName();
+    this.wms = this.clientModel.getWmsKey();
+    this.tep = this.clientModel.getTepKey();
+    this.sap = this.clientModel.getSapKey();
+
+    this.getTransactions(this.dbName);
+
+    this.isLargeScreen = window.innerWidth > 1280;
+    this.porcentajeAltura = 45;
+    this.porcentajeAncho =
+      this.tep == 'true' && this.sap == 'true' && this.sap == 'true' ? 20 : 25;
+    this.updateView();
+  }
+
   @HostListener('window:resize', ['$event'])
   onResize() {
     this.updateView();
+
+    this.isLargeScreen = window.innerWidth > 1280;
+    this.refreshcharts();
   }
 
   updateView() {
@@ -73,21 +93,6 @@ export class DashboardComponent implements OnInit {
     domain: ['rgb(178,34,34)', ' rgb(0, 38, 58)'],
   };
 
-  ngOnInit(): void {
-    this.name = this.clientModel.getUserName();
-    this.dbName = this.clientModel.getDbName();
-    this.wms = this.clientModel.getWmsKey();
-    this.tep = this.clientModel.getTepKey();
-    this.sap = this.clientModel.getSapKey();
-
-    this.getTransactions(this.dbName);
-
-    this.porcentajeAltura = 45;
-    this.porcentajeAncho =
-      this.tep == 'true' && this.sap == 'true' && this.sap == 'true' ? 20 : 25;
-    this.updateView();
-  }
-
   async getTransactions(dbName: string) {
     try {
       await this.wmsService.getWmsTrans(dbName).toPromise();
@@ -102,11 +107,19 @@ export class DashboardComponent implements OnInit {
 
       this.wmsChart = [
         {
-          name: 'Exitosos',
+          name: `Exitosos ${
+            this.isLargeScreen
+              ? ((succes / this.transactionsWMS.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: succes,
         },
         {
-          name: 'Fallidos',
+          name: `Fallidos ${
+            this.isLargeScreen
+              ? ((fail / this.transactionsWMS.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: fail,
         },
         {
@@ -115,7 +128,7 @@ export class DashboardComponent implements OnInit {
         },
       ];
     } catch (error) {
-      console.error('Error en this.wmsService.getWmsTrans:', error);
+      console.error('Error en obteniendo data WMS:', error);
     }
 
     try {
@@ -132,11 +145,19 @@ export class DashboardComponent implements OnInit {
 
       this.tepChart = [
         {
-          name: 'Exitosos',
+          name: `Exitosos ${
+            this.isLargeScreen
+              ? ((succes / this.transactionsTEP.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: succes,
         },
         {
-          name: 'Fallidos',
+          name: `Fallidos ${
+            this.isLargeScreen
+              ? ((fail / this.transactionsTEP.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: fail,
         },
         {
@@ -145,7 +166,7 @@ export class DashboardComponent implements OnInit {
         },
       ];
     } catch (error) {
-      console.error('Error en this.tepService.getTepTrans:', error);
+      console.error('Error en obteniendo data TEP:', error);
     }
 
     try {
@@ -162,11 +183,19 @@ export class DashboardComponent implements OnInit {
 
       this.sapChart = [
         {
-          name: 'Exitosos',
+          name: `Exitosos ${
+            this.isLargeScreen
+              ? ((succes / this.transactionsSAP.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: succes,
         },
         {
-          name: 'Fallidos',
+          name: `Fallidos ${
+            this.isLargeScreen
+              ? ((fail / this.transactionsSAP.length) * 100).toFixed(0) + '%'
+              : ''
+          }`,
           value: fail,
         },
         {
@@ -175,28 +204,123 @@ export class DashboardComponent implements OnInit {
         },
       ];
     } catch (error) {
-      console.error('Error en this.sapService.getSapTrans:', error);
+      console.error('Error en obteniendo data SAP:', error);
     }
+
+    this.total =
+      this.wmsChart[2].value + this.tepChart[2].value + this.sapChart[2].value;
 
     this.pieChartData = [
       {
-        name: `Errados`,
+        name: `Errados ${(
+          ((this.wmsChart[1].value +
+            this.tepChart[1].value +
+            this.sapChart[1].value) *
+            100) /
+          this.total
+        ).toFixed(2)}%`,
         value:
           this.wmsChart[1].value +
           this.tepChart[1].value +
           this.sapChart[1].value,
       },
       {
-        name: 'Exitosos',
+        name: `Exitosos ${(
+          ((this.wmsChart[0].value +
+            this.tepChart[0].value +
+            this.sapChart[0].value) *
+            100) /
+          this.total
+        ).toFixed(2)}%`,
         value:
           this.wmsChart[0].value +
           this.tepChart[0].value +
           this.sapChart[0].value,
       },
     ];
+  }
 
-    this.total =
-      this.wmsChart[2].value + this.tepChart[2].value + this.sapChart[2].value;
+  refreshcharts() {
+    this.wmsChart = [
+      {
+        name: `Exitosos ${
+          this.isLargeScreen
+            ? ((this.wmsChart[0].value / this.wmsChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.wmsChart[0].value,
+      },
+      {
+        name: `Fallidos ${
+          this.isLargeScreen
+            ? ((this.wmsChart[1].value / this.wmsChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.wmsChart[1].value,
+      },
+      {
+        name: 'Totales',
+        value: this.wmsChart[2].value,
+      },
+    ];
+
+    this.tepChart = [
+      {
+        name: `Exitosos ${
+          this.isLargeScreen
+            ? ((this.tepChart[0].value / this.tepChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.tepChart[0].value,
+      },
+      {
+        name: `Fallidos ${
+          this.isLargeScreen
+            ? ((this.tepChart[1].value / this.tepChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.tepChart[1].value,
+      },
+      {
+        name: 'Totales',
+        value: this.tepChart[2].value,
+      },
+    ];
+
+    this.sapChart = [
+      {
+        name: `Exitosos ${
+          this.isLargeScreen
+            ? ((this.sapChart[0].value / this.sapChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.sapChart[0].value,
+      },
+      {
+        name: `Fallidos ${
+          this.isLargeScreen
+            ? ((this.sapChart[1].value / this.sapChart[2].value) * 100).toFixed(
+                0
+              ) + '%'
+            : ''
+        }`,
+        value: this.sapChart[1].value,
+      },
+      {
+        name: 'Totales',
+        value: this.sapChart[2].value,
+      },
+    ];
   }
 
   onSelect(a: any) {

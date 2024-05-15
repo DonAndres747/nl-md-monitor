@@ -149,8 +149,8 @@ button {
 }
 
 .tepSection2 {
-  width: 92%;
-  height: 55vh;
+  width: 90%;
+  height: 56vh;
   display: flex;
   flex-wrap: wrap;
   align-self: center;
@@ -182,7 +182,9 @@ button {
 }
 
 .interface input {
+  height: 2.5vh;
   border-radius: 5px;
+  font-size: 1vw;
 }
 
 .buttonsTep {

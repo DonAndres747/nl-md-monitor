@@ -4,7 +4,7 @@
     <p>actividad reciente</p>
   </div>
 
-  <div class="dashboards">
+  <div class="dashboards" (window:resize)="onResize()">
     <div class="dashboard" *ngIf="wms == 'true'">
       <mat-card>
         <mat-card-content>
