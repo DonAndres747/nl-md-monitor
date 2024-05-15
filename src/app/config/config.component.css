@@ -79,7 +79,6 @@ h2 {
 }
 
 button {
-  /* background-color:  rgb(0, 38, 58); */
   color: white;
   border: 0;
   border-radius: 5%;
@@ -118,4 +117,85 @@ button {
     margin-top: 0.8%;
     margin-bottom: 1%;
   }
+}
+
+/* Estilos para tep */
+
+.tepTittle {
+  align-self: self-start;
+  margin-left: 2%;
+}
+
+.tepSection,
+.loginTep {
+  align-items: self-start;
+}
+
+.loginTep {
+  flex-direction: row;
+  width: 95%;
+  align-self: center;
+}
+
+.loginTep label {
+  min-width: max-content;
+  margin: 0 5px 0 10px;
+  font-size: large;
+  align-self: center;
+}
+
+.loginTep input {
+  margin: 0;
+}
+
+.tepSection2 {
+  width: 92%;
+  height: 55vh;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-content: space-evenly;
+  padding: 1% 0;
+  border-radius: 10px;
+  overflow-y: scroll;
+  background-color: white;
+  box-shadow: inset 2px 2px 15px rgba(0, 0, 0, 0.2);
+}
+
+.tepSection2::-webkit-scrollbar {
+  width: 0;
+}
+
+.interface {
+  width: 48%;
+  margin: 0 0.5% 10px 0.5%;
+  padding: 10px;
+  text-align: center;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background-color: rgba(76, 102, 115, 1);
+  /* box-shadow: inset 2px 2px 15px rgba(0, 0, 0, 0.2); */
+}
+
+.interface h2 {
+  color: white;
+}
+
+.interface input {
+  border-radius: 5px;
+}
+
+.buttonsTep {
+  width: 95%;
+  margin-top: 2%;
+}
+
+@media screen and (max-width: 1280px) {
+  .buttonsTep {
+    margin-top: 0.8%;
+  }
+}
+
+.buttonsTep button {
+  border-radius: 10px;
 }

@@ -1,9 +1,11 @@
-<body>
-  <a>{{ solution }}</a>
-  <div class="inline"></div>
-  <h1>Configura tus URL para {{ solution }}</h1>
-  <div class="section">
-    <h2>{{ solution == "TEP" ? "Login" : "Servicio" }}</h2>
+<body [ngClass]="solution == 'TEP' ? 'tepSection' : ''">
+  <a *ngIf="solution != 'TEP'">{{ solution }}</a>
+  <div *ngIf="solution != 'TEP'" class="inline"></div>
+  <h1 [ngClass]="solution == 'TEP' ? 'tepTittle' : ''">
+    Configura tus URL para {{ solution }}
+  </h1>
+  <div [ngClass]="solution == 'TEP' ? 'loginTep' : ''" class="section">
+    <h2 *ngIf="solution != 'TEP'">Servicio</h2>
     <label for="current">Actual URL:</label>
     <input
       class="readonly"
@@ -13,7 +15,7 @@
     <label for="current">Nueva URL:</label>
     <input [(ngModel)]="serviceVal" name="serviceVal" />
   </div>
-  <div class="section">
+  <div class="section" *ngIf="solution != 'TEP'">
     <h2>Endpoint</h2>
     <div class="section2">
       <div class="Endpoint-sec">
@@ -30,7 +32,23 @@
       </div>
     </div>
   </div>
-  <div class="buttons">
+  <div *ngIf="solution == 'TEP'" class="tepSection2">
+    @for(interface of tepIntData; track interface.name; let idx= $index;){
+    <div class="interface">
+      <h2>{{ capitalizeFirstLetter(interface.name) }}</h2>
+      <input
+        type="text"
+        class="readonly"
+        value="{{ interface.currentValue }}"
+        readonly
+      />
+      <!-- [(ngModel)]="interface.newValue" -->
+      <!-- (input)="onChange($event, idx)" -->
+      <input type="text" [(ngModel)]="interface.newValue" />
+    </div>
+    }
+  </div>
+  <div class="buttons" [ngClass]="solution == 'TEP' ? 'buttonsTep' : ''">
     <button (click)="clearinputs()">Limpiar</button>
     <button
       [ngClass]="active() ? 'buttonUnactive' : ''"

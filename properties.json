@@ -1,11 +1,11 @@
 {
     "database": {
-        "host": "192.168.71.81",
+        "host": "localhost",
         "port": "27017",
         "dbName": "clients_credentials"
     },
     "services": {
-        "host": "192.168.71.81",
+        "host": "localhost",
         "port": "3000"
     }
 }
